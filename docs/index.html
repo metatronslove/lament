@@ -12,16 +12,16 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="Lament Configuration - 3D Viewer">
     <meta property="og:description" content="Interactive 3D viewer for the Lament Configuration box">
-    <meta property="og:image" content="https://metatronslove.github.io/lament/docs/social-preview.jpg">
+    <meta property="og:image" content="https://metatronslove.github.io/lament/social-preview.jpg">
     
     <!-- Three.js ve ViewSTL -->
-    <script src="js/three.min.js"></script>
-    <script src="js/webgl_detector.js"></script>
-    <script src="js/Projector.js"></script>
-    <script src="js/CanvasRenderer.js"></script>
-    <script src="js/OrbitControls.js"></script>
-    <script src="js/TrackballControls.js"></script>
-    <script src="js/stl_viewer.min.js"></script>
+    <script src="https://metatronslove.github.io/lament/js/three.min.js"></script>
+    <script src="https://metatronslove.github.io/lament/js/webgl_detector.js"></script>
+    <script src="https://metatronslove.github.io/lament/js/Projector.js"></script>
+    <script src="https://metatronslove.github.io/lament/js/CanvasRenderer.js"></script>
+    <script src="https://metatronslove.github.io/lament/js/OrbitControls.js"></script>
+    <script src="https://metatronslove.github.io/lament/js/TrackballControls.js"></script>
+    <script src="https://metatronslove.github.io/lament/js/stl_viewer.min.js"></script>
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -124,12 +124,12 @@
         <h3 style="color: #b8860b; text-align: center;">🔷 LAMENT</h3>
         
         <select id="modelSelect">
-            <option value="models/Lament_Configuration_Cube-3x3x3P.stl">Cube 3x3x3P</option>
-            <option value="models/Lament_Configuration_Cube-3x3x3N.stl">Cube 3x3x3N</option>
-            <option value="models/Lament_Configuration_3x3x3_Positive.stl">3x3x3 Positive</option>
-            <option value="models/Lament_Configuration_3x3x3_Negative.stl">3x3x3 Negative</option>
-            <option value="models/Lament_Configuration_3x3x3_Positive_A.stl" selected>Positive A</option>
-            <option value="models/Lament_Configuration_3x3x3_Positive_B.stl">Positive B</option>
+            <option value="https://metatronslove.github.io/lament/models/Lament_Configuration_Cube-3x3x3P.stl">Cube 3x3x3P</option>
+            <option value="https://metatronslove.github.io/lament/models/Lament_Configuration_Cube-3x3x3N.stl">Cube 3x3x3N</option>
+            <option value="https://metatronslove.github.io/lament/models/Lament_Configuration_3x3x3_Positive.stl">3x3x3 Positive</option>
+            <option value="https://metatronslove.github.io/lament/models/Lament_Configuration_3x3x3_Negative.stl">3x3x3 Negative</option>
+            <option value="https://metatronslove.github.io/lament/models/Lament_Configuration_3x3x3_Positive_A.stl" selected>Positive A</option>
+            <option value="https://metatronslove.github.io/lament/models/Lament_Configuration_3x3x3_Positive_B.stl">Positive B</option>
         </select>
         
         <input type="color" id="colorPicker" value="#b8860b">
@@ -165,17 +165,17 @@
             let currentModelId = 0;
             
             const modelFiles = [
-                "models/Lament_Configuration_Cube-3x3x3P.stl",
-                "models/Lament_Configuration_Cube-3x3x3N.stl",
-                "models/Lament_Configuration_3x3x3_Positive.stl",
-                "models/Lament_Configuration_3x3x3_Negative.stl",
-                "models/Lament_Configuration_3x3x3_Positive_A.stl",
-                "models/Lament_Configuration_3x3x3_Positive_B.stl"
+                "https://metatronslove.github.io/lament/models/Lament_Configuration_Cube-3x3x3P.stl",
+                "https://metatronslove.github.io/lament/models/Lament_Configuration_Cube-3x3x3N.stl",
+                "https://metatronslove.github.io/lament/models/Lament_Configuration_3x3x3_Positive.stl",
+                "https://metatronslove.github.io/lament/models/Lament_Configuration_3x3x3_Negative.stl",
+                "https://metatronslove.github.io/lament/models/Lament_Configuration_3x3x3_Positive_A.stl",
+                "https://metatronslove.github.io/lament/models/Lament_Configuration_3x3x3_Positive_B.stl"
             ];
             
             // Worker'ın load_stl.min.js'i bulması için path'i ayarla
             // stl_viewer.min.js içindeki stl_viewer_script_path değişkenini set et
-            window.stl_viewer_script_path = "js/";
+            window.stl_viewer_script_path = "https://metatronslove.github.io/lament/js/";
             
             function initViewer() {
                 try {
