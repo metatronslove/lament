@@ -1,6 +1,6 @@
 # 🔷 Lament Configuration - Hellraiser Puzzle Box 3D Viewer
 
-![Hellraiser Puzzle Box](docs/social-preview.jpg)
+![Hellraiser Puzzle Box](docs/og-image.png)
 
 Bu proje, **Hellraiser** film serisindeki ikonik **Lament Configuration** kutusunun interaktif 3D görüntüleyicisidir. 
 
@@ -59,3 +59,4 @@ Ayrıca ViewSTL gibi araçları geliştiren ekibe de teşekkürler!
 *Bu proje bir Hellraiser hayranı tarafından, hayranlar için hazırlanmıştır. Ticari bir amacı yoktur, sadece bu ikonik tasarımı web'de görüntülemeyi amaçlar.*
 
 🔷 *"We have such sights to show you."*
+
