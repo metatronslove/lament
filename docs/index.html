@@ -3,31 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lament Configuration - 3D Viewer</title>
+    <title>Lament Configuration - Hellraiser Puzzle Box</title>
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='90' font-size='90'>🔷</text></svg>">
     
-    <!-- ViewSTL JS (local dosyalar) -->
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Lament Configuration - 3D Viewer">
+    <meta property="og:description" content="Interactive 3D viewer for the Lament Configuration box">
+    <meta property="og:image" content="https://metatronslove.github.io/lament/docs/social-preview.jpg">
+    
+    <!-- ViewSTL - SADECE GEREKLİ DOSYALAR (load_stl.min.js Worker olduğu için eklenmez) -->
     <script src="js/three.min.js"></script>
     <script src="js/stl_viewer.min.js"></script>
     <script src="js/OrbitControls.js"></script>
     <script src="js/TrackballControls.js"></script>
-    <script src="js/Projector.js"></script>
-    <script src="js/CanvasRenderer.js"></script>
-    <script src="js/webgl_detector.js"></script>
-    <!-- Worker için load_stl.min.js de gerekli -->
-    <script src="js/load_stl.min.js"></script>
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* Basit ve temiz tasarım */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: 'Cinzel', serif;
+            font-family: 'Arial', sans-serif;
             background: #0a0a0a;
             overflow: hidden;
             height: 100vh;
@@ -44,152 +42,67 @@
             z-index: 1;
         }
         
-        /* Kontrol Paneli */
-        #control-panel {
+        /* Basit kontrol paneli */
+        #controls {
             position: absolute;
             top: 20px;
             left: 20px;
-            width: 280px;
-            background: rgba(10, 8, 6, 0.9);
-            backdrop-filter: blur(10px);
-            border: 2px solid #8a6e45;
-            border-radius: 16px;
+            background: rgba(20, 20, 20, 0.9);
+            border: 2px solid #b8860b;
+            border-radius: 12px;
             padding: 15px;
-            color: #f0e6d2;
+            color: white;
             z-index: 10;
-            max-height: calc(100vh - 100px);
-            overflow-y: auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-        }
-        
-        #control-panel::-webkit-scrollbar {
-            width: 4px;
-        }
-        #control-panel::-webkit-scrollbar-thumb {
-            background: #8a6e45;
-            border-radius: 4px;
-        }
-        
-        @media (max-width: 768px) {
-            #control-panel {
-                transform: translateX(-120%);
-                transition: transform 0.3s ease;
-            }
-            #control-panel.visible {
-                transform: translateX(0);
-            }
-            #toggle-panel {
-                display: flex;
-            }
-        }
-        
-        #toggle-panel {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 44px;
-            height: 44px;
-            background: rgba(10,8,6,0.9);
-            border: 2px solid #8a6e45;
-            border-radius: 10px;
-            color: #d4af37;
-            font-size: 22px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 15;
-        }
-        
-        .panel-header {
-            text-align: center;
-            border-bottom: 1px solid #8a6e45;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .panel-header h2 {
-            color: #d4af37;
-            font-size: 1.2rem;
-            letter-spacing: 4px;
+            width: 260px;
+            backdrop-filter: blur(5px);
         }
         
         select, input[type="color"] {
             width: 100%;
-            padding: 10px;
-            background: rgba(0,0,0,0.6);
-            border: 1px solid #5a4a3a;
-            border-radius: 20px;
-            color: #f0e6d2;
-            margin-bottom: 8px;
-            font-family: inherit;
+            padding: 8px;
+            margin: 5px 0 10px 0;
+            background: #333;
+            border: 1px solid #b8860b;
+            color: white;
+            border-radius: 5px;
         }
         
-        .button-grid {
+        .btn-group {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 6px;
+            gap: 5px;
             margin: 10px 0;
         }
         
-        .btn {
-            padding: 8px 5px;
-            background: rgba(20,15,12,0.9);
-            border: 1px solid #5a4a3a;
-            border-radius: 20px;
-            color: #e0d8c0;
-            font-size: 0.75rem;
+        button {
+            padding: 8px;
+            background: #333;
+            border: 1px solid #b8860b;
+            color: #b8860b;
+            border-radius: 5px;
             cursor: pointer;
-            text-transform: uppercase;
         }
         
-        .btn.active {
-            background: #d4af37;
-            border-color: #f0e6d2;
-            color: #0a0a0a;
+        button.active {
+            background: #b8860b;
+            color: black;
         }
         
-        .info-panel {
-            background: rgba(0,0,0,0.5);
-            border: 1px solid #5a4a3a;
-            border-radius: 12px;
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 0.8rem;
+        .info {
+            margin-top: 10px;
+            padding: 8px;
+            background: #222;
+            border-radius: 5px;
+            font-size: 0.9rem;
         }
         
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-            padding-bottom: 4px;
-            border-bottom: 1px dotted #8a6e45;
-        }
-        
-        .loading-container {
-            width: 100%;
-            height: 4px;
-            background: #2a241e;
-            border-radius: 4px;
-            margin: 10px 0;
-            overflow: hidden;
-        }
-        
-        .loading-progress {
-            width: 0%;
-            height: 100%;
-            background: #d4af37;
-            transition: width 0.3s ease;
-        }
-        
-        #status {
-            color: #d4af37;
+        .status {
+            color: #b8860b;
             text-align: center;
-            font-size: 0.8rem;
-            margin: 5px 0;
+            margin-top: 5px;
         }
         
-        .bmc-container {
+        #bmc-container {
             position: absolute;
             bottom: 20px;
             right: 20px;
@@ -201,70 +114,61 @@
             bottom: 20px;
             left: 20px;
             color: #666;
-            font-size: 0.7rem;
-            background: rgba(0,0,0,0.3);
-            padding: 4px 12px;
+            font-size: 0.8rem;
+            background: rgba(0,0,0,0.5);
+            padding: 5px 15px;
             border-radius: 20px;
+            z-index: 5;
         }
     </style>
 </head>
 <body>
     <div id="viewer-container"></div>
-    <div id="toggle-panel">🔷</div>
     
-    <div id="control-panel">
-        <div class="panel-header">
-            <h2>LAMENT</h2>
-        </div>
+    <!-- Basit kontrol paneli -->
+    <div id="controls">
+        <h3 style="color: #b8860b; text-align: center; margin-bottom: 10px;">🔷 LAMENT CONFIGURATION</h3>
         
         <select id="modelSelect">
             <option value="models/Lament_Configuration_Cube-3x3x3P.stl">Cube 3x3x3P</option>
             <option value="models/Lament_Configuration_Cube-3x3x3N.stl">Cube 3x3x3N</option>
             <option value="models/Lament_Configuration_3x3x3_Positive.stl">3x3x3 Positive</option>
             <option value="models/Lament_Configuration_3x3x3_Negative.stl">3x3x3 Negative</option>
-            <option value="models/Lament_Configuration_3x3x3_Positive_A.stl" selected>Positive A</option>
-            <option value="models/Lament_Configuration_3x3x3_Positive_B.stl">Positive B</option>
+            <option value="models/Lament_Configuration_3x3x3_Positive_A.stl" selected>Positive A (Crouching Man)</option>
+            <option value="models/Lament_Configuration_3x3x3_Positive_B.stl">Positive B (Beautiful Woman)</option>
         </select>
         
         <input type="color" id="colorPicker" value="#b8860b">
         
-        <div class="button-grid">
-            <button id="viewFlat" class="btn active">FLAT</button>
-            <button id="viewSmooth" class="btn">SMOOTH</button>
-            <button id="viewWireframe" class="btn">WIRE</button>
-            <button id="viewEdges" class="btn">EDGES</button>
-            <button id="toggleRotate" class="btn">ROTATE</button>
-            <button id="toggleGrid" class="btn">GRID</button>
-            <button id="resetView" class="btn">VIEW</button>
-            <button id="resetRotation" class="btn">ROT</button>
+        <div class="btn-group">
+            <button id="viewFlat" class="active">FLAT</button>
+            <button id="viewSmooth">SMOOTH</button>
+            <button id="viewWireframe">WIRE</button>
+            <button id="toggleRotate">ROTATE</button>
+            <button id="toggleGrid">GRID</button>
+            <button id="resetView">RESET</button>
         </div>
         
-        <div class="info-panel">
-            <div class="info-row">
+        <div class="info">
+            <div style="display: flex; justify-content: space-between;">
                 <span>Model:</span>
-                <span id="currentModelName">Positive A</span>
+                <span id="currentModel">Positive A</span>
             </div>
-            <div class="loading-container">
-                <div class="loading-progress" id="loadingProgress"></div>
-            </div>
-            <div class="info-row">
-                <span>Status:</span>
-                <span id="status">Ready</span>
-            </div>
+            <div class="status" id="status">Ready</div>
         </div>
     </div>
     
-    <div class="bmc-container">
+    <!-- Buy Me A Coffee - AYRI KONTEYNIR -->
+    <div id="bmc-container">
         <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="metatronslove" data-description="Support me on Buy me a coffee!" data-color="#FFDD00" data-position="right" data-x_margin="18" data-y_margin="18"></script>
     </div>
     
-    <div class="signature">metatronslove</div>
+    <div class="signature">metatronslove • Hellraiser Tribute</div>
     
     <script>
         (function() {
             const container = document.getElementById('viewer-container');
             let viewer = null;
-            let modelLoaded = false;
             
             const modelFiles = [
                 "models/Lament_Configuration_Cube-3x3x3P.stl",
@@ -275,10 +179,8 @@
                 "models/Lament_Configuration_3x3x3_Positive_B.stl"
             ];
             
-            // Worker hatasını engelle - load_stl.min.js'i manuel yükle
-            if (typeof window.Worker === 'undefined') {
-                console.warn('Web Workers not supported');
-            }
+            // Worker hatasını engelle - load_stl.min.js'i yükleme
+            // ViewSTL'in kendi Worker'ını kullanmasına izin ver
             
             function initViewer() {
                 try {
@@ -288,120 +190,100 @@
                         mouse_zoom: true,
                         allow_drag_and_drop: true,
                         
+                        // Callback'ler
                         all_loaded_callback: function() {
-                            modelLoaded = true;
                             document.getElementById('status').innerText = 'Ready';
-                            document.getElementById('loadingProgress').style.width = '100%';
                         },
                         
-                        loading_progress_callback: function(load_status) {
-                            if (load_status && load_status[0]) {
-                                const pct = (load_status[0].loaded / load_status[0].total) * 100;
-                                document.getElementById('loadingProgress').style.width = pct + '%';
-                                document.getElementById('status').innerText = 'Loading ' + Math.round(pct) + '%';
-                            }
+                        load_error_callback: function(err) {
+                            console.warn('Load error:', err);
+                            document.getElementById('status').innerText = 'Error';
                         }
                     });
                     
-                    // Model yükleme fonksiyonu
-                    function loadModel(index) {
-                        if (!viewer) return;
-                        
-                        const filename = modelFiles[index];
-                        document.getElementById('loadingProgress').style.width = '0%';
-                        document.getElementById('status').innerText = 'Loading...';
-                        
-                        // Önceki modeli kaldır (hata vermesin)
-                        try { viewer.remove_model(0); } catch(e) {}
-                        
-                        // Yeni model ekle
-                        viewer.add_model({
-                            id: 0,
-                            filename: filename,
-                            color: document.getElementById('colorPicker').value,
-                            display: 'flat'
-                        });
-                    }
-                    
-                    // Varsayılan model (Positive A)
-                    setTimeout(() => loadModel(4), 500);
-                    
-                    // Event listeners
-                    document.getElementById('modelSelect').addEventListener('change', function(e) {
-                        loadModel(e.target.selectedIndex);
-                    });
-                    
-                    document.getElementById('colorPicker').addEventListener('input', function(e) {
-                        if (viewer && modelLoaded) {
-                            try { viewer.set_color(0, e.target.value); } catch(e) {}
-                        }
-                    });
-                    
-                    document.getElementById('viewFlat').addEventListener('click', function() {
-                        if (!viewer || !modelLoaded) return;
-                        try { viewer.set_display(0, 'flat'); } catch(e) {}
-                        document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                    });
-                    
-                    document.getElementById('viewSmooth').addEventListener('click', function() {
-                        if (!viewer || !modelLoaded) return;
-                        try { viewer.set_display(0, 'smooth'); } catch(e) {}
-                        document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                    });
-                    
-                    document.getElementById('viewWireframe').addEventListener('click', function() {
-                        if (!viewer || !modelLoaded) return;
-                        try { viewer.set_display(0, 'wireframe'); } catch(e) {}
-                        document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                    });
-                    
-                    let edges = false;
-                    document.getElementById('viewEdges').addEventListener('click', function() {
-                        if (!viewer || !modelLoaded) return;
-                        edges = !edges;
-                        try { viewer.set_edges(0, edges); } catch(e) {}
-                        this.classList.toggle('active', edges);
-                    });
-                    
-                    let grid = false;
-                    document.getElementById('toggleGrid').addEventListener('click', function() {
-                        if (!viewer || !modelLoaded) return;
-                        grid = !grid;
-                        try { viewer.set_grid(grid, 100, 10); } catch(e) {}
-                        this.classList.toggle('active', grid);
-                    });
-                    
-                    let rotate = false;
-                    document.getElementById('toggleRotate').addEventListener('click', function() {
-                        if (!viewer || !modelLoaded) return;
-                        rotate = !rotate;
-                        try { viewer.set_auto_rotate(rotate); } catch(e) {}
-                        this.classList.toggle('active', rotate);
-                    });
-                    
-                    document.getElementById('resetView').addEventListener('click', function() {
-                        if (!viewer || !modelLoaded) return;
-                        try { viewer.set_auto_resize(true); } catch(e) {}
-                    });
-                    
-                    document.getElementById('resetRotation').addEventListener('click', function() {
-                        if (!viewer || !modelLoaded) return;
-                        try { viewer.rotate(0, 0, 0, 0); } catch(e) {}
-                    });
+                    // Varsayılan modeli yükle
+                    setTimeout(() => {
+                        loadModel(4); // Positive A
+                    }, 500);
                     
                 } catch (e) {
-                    console.warn('Retrying...');
+                    console.warn('Init error, retrying...', e);
                     setTimeout(initViewer, 1000);
                 }
             }
             
-            // Mobile panel
-            const panel = document.getElementById('control-panel');
-            document.getElementById('toggle-panel').addEventListener('click', function() {
-                panel.classList.toggle('visible');
+            function loadModel(index) {
+                if (!viewer) return;
+                
+                const filename = modelFiles[index];
+                const displayName = document.querySelectorAll('#modelSelect option')[index].text;
+                
+                document.getElementById('currentModel').innerText = displayName;
+                document.getElementById('status').innerText = 'Loading...';
+                
+                // Önceki modeli kaldır (hata vermesin)
+                try { viewer.remove_model(0); } catch(e) {}
+                
+                // Yeni modeli ekle
+                viewer.add_model({
+                    id: 0,
+                    filename: filename,
+                    color: document.getElementById('colorPicker').value,
+                    display: 'flat'
+                });
+            }
+            
+            // Event listeners
+            document.getElementById('modelSelect').addEventListener('change', function(e) {
+                loadModel(e.target.selectedIndex);
+            });
+            
+            document.getElementById('colorPicker').addEventListener('input', function(e) {
+                if (viewer) {
+                    try { viewer.set_color(0, e.target.value); } catch(e) {}
+                }
+            });
+            
+            document.getElementById('viewFlat').addEventListener('click', function() {
+                if (!viewer) return;
+                try { viewer.set_display(0, 'flat'); } catch(e) {}
+                document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+            
+            document.getElementById('viewSmooth').addEventListener('click', function() {
+                if (!viewer) return;
+                try { viewer.set_display(0, 'smooth'); } catch(e) {}
+                document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+            
+            document.getElementById('viewWireframe').addEventListener('click', function() {
+                if (!viewer) return;
+                try { viewer.set_display(0, 'wireframe'); } catch(e) {}
+                document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+            
+            let rotate = false;
+            document.getElementById('toggleRotate').addEventListener('click', function() {
+                if (!viewer) return;
+                rotate = !rotate;
+                try { viewer.set_auto_rotate(rotate); } catch(e) {}
+                this.classList.toggle('active', rotate);
+            });
+            
+            let grid = false;
+            document.getElementById('toggleGrid').addEventListener('click', function() {
+                if (!viewer) return;
+                grid = !grid;
+                try { viewer.set_grid(grid, 100, 10); } catch(e) {}
+                this.classList.toggle('active', grid);
+            });
+            
+            document.getElementById('resetView').addEventListener('click', function() {
+                if (!viewer) return;
+                try { viewer.set_auto_resize(true); } catch(e) {}
             });
             
             // Başlat
