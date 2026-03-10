@@ -3,25 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lament Configuration - Hellraiser Puzzle Box</title>
+    <title>Lament Configuration - 3D Viewer</title>
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='90' font-size='90'>🔷</text></svg>">
     
     <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Lament Configuration - 3D Viewer">
-    <meta property="og:description" content="Interactive 3D viewer for the Lament Configuration box">
+    <meta property="og:url" content="https://metatronslove.github.io/lament/">
+    <meta property="og:title" content="Lament Configuration - Hellraiser Puzzle Box">
+    <meta property="og:description" content="Interactive 3D viewer for the Lament Configuration box from Hellraiser">
     <meta property="og:image" content="https://metatronslove.github.io/lament/docs/social-preview.jpg">
     
-    <!-- ViewSTL - SADECE GEREKLİ DOSYALAR (load_stl.min.js Worker olduğu için eklenmez) -->
+    <!-- ViewSTL için TÜM GEREKLİ DOSYALAR (doğru sırayla) -->
     <script src="js/three.min.js"></script>
-    <script src="js/stl_viewer.min.js"></script>
+    <script src="js/webgl_detector.js"></script>
+    <script src="js/Projector.js"></script>
+    <script src="js/CanvasRenderer.js"></script>
     <script src="js/OrbitControls.js"></script>
     <script src="js/TrackballControls.js"></script>
+    <script src="js/stl_viewer.min.js"></script>
+    <!-- NOT: load_stl.min.js Worker olduğu için script olarak eklenmez! -->
     
     <style>
-        /* Basit ve temiz tasarım */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
@@ -60,7 +64,7 @@
         select, input[type="color"] {
             width: 100%;
             padding: 8px;
-            margin: 5px 0 10px 0;
+            margin: 5px 0;
             background: #333;
             border: 1px solid #b8860b;
             color: white;
@@ -93,13 +97,6 @@
             padding: 8px;
             background: #222;
             border-radius: 5px;
-            font-size: 0.9rem;
-        }
-        
-        .status {
-            color: #b8860b;
-            text-align: center;
-            margin-top: 5px;
         }
         
         #bmc-container {
@@ -125,17 +122,16 @@
 <body>
     <div id="viewer-container"></div>
     
-    <!-- Basit kontrol paneli -->
     <div id="controls">
-        <h3 style="color: #b8860b; text-align: center; margin-bottom: 10px;">🔷 LAMENT CONFIGURATION</h3>
+        <h3 style="color: #b8860b; text-align: center;">🔷 LAMENT</h3>
         
         <select id="modelSelect">
             <option value="models/Lament_Configuration_Cube-3x3x3P.stl">Cube 3x3x3P</option>
             <option value="models/Lament_Configuration_Cube-3x3x3N.stl">Cube 3x3x3N</option>
             <option value="models/Lament_Configuration_3x3x3_Positive.stl">3x3x3 Positive</option>
             <option value="models/Lament_Configuration_3x3x3_Negative.stl">3x3x3 Negative</option>
-            <option value="models/Lament_Configuration_3x3x3_Positive_A.stl" selected>Positive A (Crouching Man)</option>
-            <option value="models/Lament_Configuration_3x3x3_Positive_B.stl">Positive B (Beautiful Woman)</option>
+            <option value="models/Lament_Configuration_3x3x3_Positive_A.stl" selected>Positive A</option>
+            <option value="models/Lament_Configuration_3x3x3_Positive_B.stl">Positive B</option>
         </select>
         
         <input type="color" id="colorPicker" value="#b8860b">
@@ -154,16 +150,15 @@
                 <span>Model:</span>
                 <span id="currentModel">Positive A</span>
             </div>
-            <div class="status" id="status">Ready</div>
+            <div style="color: #b8860b; text-align: center; margin-top: 5px;" id="status">Ready</div>
         </div>
     </div>
     
-    <!-- Buy Me A Coffee - AYRI KONTEYNIR -->
     <div id="bmc-container">
         <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="metatronslove" data-description="Support me on Buy me a coffee!" data-color="#FFDD00" data-position="right" data-x_margin="18" data-y_margin="18"></script>
     </div>
     
-    <div class="signature">metatronslove • Hellraiser Tribute</div>
+    <div class="signature">metatronslove</div>
     
     <script>
         (function() {
@@ -179,20 +174,19 @@
                 "models/Lament_Configuration_3x3x3_Positive_B.stl"
             ];
             
-            // Worker hatasını engelle - load_stl.min.js'i yükleme
-            // ViewSTL'in kendi Worker'ını kullanmasına izin ver
-            
             function initViewer() {
                 try {
+                    console.log('Initializing viewer...');
+                    
                     viewer = new StlViewer(container, {
                         bgcolor: "#0a0a0a",
                         auto_resize: true,
                         mouse_zoom: true,
                         allow_drag_and_drop: true,
                         
-                        // Callback'ler
                         all_loaded_callback: function() {
                             document.getElementById('status').innerText = 'Ready';
+                            console.log('Model loaded');
                         },
                         
                         load_error_callback: function(err) {
@@ -201,14 +195,14 @@
                         }
                     });
                     
-                    // Varsayılan modeli yükle
+                    // Varsayılan model
                     setTimeout(() => {
-                        loadModel(4); // Positive A
+                        loadModel(4);
                     }, 500);
                     
                 } catch (e) {
-                    console.warn('Init error, retrying...', e);
-                    setTimeout(initViewer, 1000);
+                    console.error('Viewer init error:', e);
+                    document.getElementById('status').innerText = 'Init failed';
                 }
             }
             
@@ -221,10 +215,10 @@
                 document.getElementById('currentModel').innerText = displayName;
                 document.getElementById('status').innerText = 'Loading...';
                 
-                // Önceki modeli kaldır (hata vermesin)
-                try { viewer.remove_model(0); } catch(e) {}
+                try {
+                    viewer.remove_model(0);
+                } catch(e) {}
                 
-                // Yeni modeli ekle
                 viewer.add_model({
                     id: 0,
                     filename: filename,
