@@ -2,28 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Lament Configuration - Hellraiser Puzzle Box 3D Interactive Viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lament Configuration - 3D Viewer</title>
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='90' font-size='90'>🔷</text></svg>">
     
-    <!-- Open Graph / Sosyal Medya -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://metatronslove.github.io/lament/">
-    <meta property="og:title" content="Lament Configuration - Hellraiser Puzzle Box">
-    <meta property="og:description" content="Fully interactive 3D viewer for the iconic Lament Configuration box from Hellraiser. Explore every detail of this puzzle box in your browser with multiple views, colors, and effects.">
-    <meta property="og:image" content="https://metatronslove.github.io/lament/docs/social-preview.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Lament Configuration - 3D Puzzle Box">
-    <meta name="twitter:description" content="Interactive 3D viewer for the iconic Lament Configuration">
-    <meta name="twitter:image" content="https://metatronslove.github.io/lament/docs/social-preview.jpg">
-    
-    <!-- ViewSTL Gerekli JS Dosyaları (TAM LİSTE) -->
+    <!-- ViewSTL JS (local dosyalar) -->
     <script src="js/three.min.js"></script>
     <script src="js/stl_viewer.min.js"></script>
     <script src="js/OrbitControls.js"></script>
@@ -31,12 +16,10 @@
     <script src="js/Projector.js"></script>
     <script src="js/CanvasRenderer.js"></script>
     <script src="js/webgl_detector.js"></script>
-    
-    <!-- Buy Me A Coffee Widget (ORİJİNAL) -->
-    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="metatronslove" data-description="Support me on Buy me a coffee!" data-message="Enjoying the box? Fuel more creations!" data-color="#FFDD00" data-position="right" data-x_margin="18" data-y_margin="18"></script>
+    <!-- Worker için load_stl.min.js de gerekli -->
+    <script src="js/load_stl.min.js"></script>
     
     <style>
-        /* ===== TÜM ÖZELLİKLERİ KORUYAN ŞIK TASARIM ===== */
         * {
             margin: 0;
             padding: 0;
@@ -44,16 +27,13 @@
         }
         
         body {
-            font-family: 'Cinzel', 'Trajan Pro', 'Times New Roman', serif;
+            font-family: 'Cinzel', serif;
             background: #0a0a0a;
-            color: #e0d8c0;
             overflow: hidden;
             height: 100vh;
             width: 100vw;
-            position: fixed;
         }
         
-        /* Ana 3D Görüntüleyici */
         #viewer-container {
             position: absolute;
             top: 0;
@@ -64,37 +44,36 @@
             z-index: 1;
         }
         
-        /* Konsol hatalarını gizle (provider-bridge.js) */
-        iframe[name="__privateStripeMetricsController"] {
-            display: none !important;
-        }
-        
-        /* Kontrol Paneli - SOL ÜST (Hellraiser Temalı) */
+        /* Kontrol Paneli */
         #control-panel {
             position: absolute;
-            top: 24px;
-            left: 24px;
-            width: 360px;
-            max-width: calc(100vw - 48px);
-            max-height: calc(100vh - 100px);
-            background: rgba(10, 8, 6, 0.92);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            top: 20px;
+            left: 20px;
+            width: 280px;
+            background: rgba(10, 8, 6, 0.9);
+            backdrop-filter: blur(10px);
             border: 2px solid #8a6e45;
-            border-radius: 24px;
-            padding: 24px 22px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.9), 0 0 0 1px #c9a063 inset, 0 0 30px #c9a06333;
-            z-index: 10;
+            border-radius: 16px;
+            padding: 15px;
             color: #f0e6d2;
+            z-index: 10;
+            max-height: calc(100vh - 100px);
             overflow-y: auto;
-            pointer-events: auto;
-            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
         
-        /* Mobil için panel gizleme */
+        #control-panel::-webkit-scrollbar {
+            width: 4px;
+        }
+        #control-panel::-webkit-scrollbar-thumb {
+            background: #8a6e45;
+            border-radius: 4px;
+        }
+        
         @media (max-width: 768px) {
             #control-panel {
                 transform: translateX(-120%);
+                transition: transform 0.3s ease;
             }
             #control-panel.visible {
                 transform: translateX(0);
@@ -104,764 +83,324 @@
             }
         }
         
-        /* Mobil panel açma butonu */
         #toggle-panel {
             position: absolute;
-            top: 24px;
-            left: 24px;
-            width: 56px;
-            height: 56px;
-            background: rgba(10, 8, 6, 0.95);
-            backdrop-filter: blur(8px);
+            top: 20px;
+            left: 20px;
+            width: 44px;
+            height: 44px;
+            background: rgba(10,8,6,0.9);
             border: 2px solid #8a6e45;
-            border-radius: 16px;
+            border-radius: 10px;
             color: #d4af37;
-            font-size: 28px;
+            font-size: 22px;
             display: none;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             z-index: 15;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.8);
         }
         
-        /* Başlık */
         .panel-header {
             text-align: center;
-            margin-bottom: 25px;
-            border-bottom: 2px solid #8a6e45;
-            padding-bottom: 18px;
+            border-bottom: 1px solid #8a6e45;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
         }
         
-        .panel-header h1 {
-            font-size: 1.9rem;
-            font-weight: 700;
-            letter-spacing: 8px;
-            text-transform: uppercase;
+        .panel-header h2 {
             color: #d4af37;
-            text-shadow: 0 0 15px #d4af37, 0 0 30px #8a6e45;
-            margin-bottom: 8px;
-            font-family: 'Cinzel', serif;
-        }
-        
-        .panel-header .subtitle {
-            font-size: 0.9rem;
-            color: #c9a063;
+            font-size: 1.2rem;
             letter-spacing: 4px;
-            text-transform: uppercase;
         }
         
-        /* Kontrol bölümleri */
-        .control-section {
-            margin-bottom: 28px;
-            border-bottom: 1px dashed #8a6e4566;
-            padding-bottom: 22px;
-        }
-        
-        .control-section:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-        
-        .section-title {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: #d4af37;
-            margin-bottom: 16px;
-            font-weight: 600;
-            border-left: 4px solid #d4af37;
-            padding-left: 12px;
-        }
-        
-        /* Select ve renk seçici */
         select, input[type="color"] {
             width: 100%;
-            padding: 14px 18px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 2px solid #5a4a3a;
-            border-radius: 40px;
+            padding: 10px;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid #5a4a3a;
+            border-radius: 20px;
             color: #f0e6d2;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            -webkit-appearance: none;
-            appearance: none;
-            margin-bottom: 14px;
-            font-family: 'Cinzel', serif;
-            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            font-family: inherit;
         }
         
-        select {
-            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22%23d4af37%22%3E%3Cpath%20d%3D%22M7%2010l5%205%205-5z%22%2F%3E%3C%2Fsvg%3E");
-            background-repeat: no-repeat;
-            background-position: right 18px center;
-            background-size: 20px;
-        }
-        
-        select:hover, input[type="color"]:hover {
-            border-color: #d4af37;
-            background: rgba(20, 15, 10, 0.9);
-        }
-        
-        /* Buton grid - TÜM KONTROLLER */
         .button-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-top: 8px;
+            gap: 6px;
+            margin: 10px 0;
         }
         
         .btn {
-            padding: 14px 8px;
-            background: rgba(20, 15, 12, 0.9);
-            border: 2px solid #5a4a3a;
+            padding: 8px 5px;
+            background: rgba(20,15,12,0.9);
+            border: 1px solid #5a4a3a;
+            border-radius: 20px;
             color: #e0d8c0;
-            border-radius: 40px;
-            font-size: 0.85rem;
-            font-weight: 600;
+            font-size: 0.75rem;
             cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-family: 'Cinzel', serif;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.6);
         }
         
         .btn.active {
             background: #d4af37;
             border-color: #f0e6d2;
             color: #0a0a0a;
-            box-shadow: 0 0 20px #d4af37;
-            font-weight: 700;
         }
         
-        .btn:hover {
-            border-color: #d4af37;
-            background: rgba(40, 30, 24, 1);
-        }
-        
-        /* Bilgi Paneli (Gelişmiş) */
         .info-panel {
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid #5a4a3a;
-            border-radius: 24px;
-            padding: 18px 16px;
-            margin: 20px 0 16px 0;
-            box-shadow: inset 0 0 30px #000;
-            font-family: 'Courier New', monospace;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid #5a4a3a;
+            border-radius: 12px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 0.8rem;
         }
         
         .info-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 14px;
-            padding-bottom: 10px;
+            margin-bottom: 5px;
+            padding-bottom: 4px;
             border-bottom: 1px dotted #8a6e45;
-            font-size: 0.9rem;
         }
         
-        .info-row:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-        
-        .info-label {
-            color: #c9a063;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-size: 0.8rem;
-        }
-        
-        .info-value {
-            color: #f0e6d2;
-            font-weight: 600;
-            text-align: right;
-        }
-        
-        /* Yükleme Çubuğu */
         .loading-container {
             width: 100%;
-            height: 6px;
+            height: 4px;
             background: #2a241e;
-            border-radius: 6px;
-            margin: 16px 0 12px 0;
+            border-radius: 4px;
+            margin: 10px 0;
             overflow: hidden;
-            border: 1px solid #5a4a3a;
         }
         
         .loading-progress {
             width: 0%;
             height: 100%;
-            background: linear-gradient(90deg, #8a6e45, #d4af37, #8a6e45);
+            background: #d4af37;
             transition: width 0.3s ease;
-            box-shadow: 0 0 10px #d4af37;
         }
         
         #status {
             color: #d4af37;
-            font-size: 0.9rem;
             text-align: center;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-top: 5px;
+            font-size: 0.8rem;
+            margin: 5px 0;
         }
         
-        /* Alt Bilgi Bağlantıları */
-        .footer-links {
-            text-align: center;
-            margin-top: 24px;
-            font-size: 0.7rem;
-            color: #666;
-            border-top: 1px solid #5a4a3a;
-            padding-top: 18px;
+        .bmc-container {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 20;
         }
         
-        .footer-links a {
-            color: #c9a063;
-            text-decoration: none;
-            transition: color 0.2s;
-            margin: 0 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .footer-links a:hover {
-            color: #d4af37;
-            text-decoration: underline;
-        }
-        
-        /* Sağ alt imza */
         .signature {
             position: absolute;
-            bottom: 24px;
-            right: 24px;
-            background: rgba(10, 8, 6, 0.8);
-            backdrop-filter: blur(4px);
-            padding: 10px 22px;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            border: 2px solid #8a6e45;
-            color: #c9a063;
-            z-index: 5;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.7);
-            pointer-events: none;
-        }
-        
-        .signature i {
-            color: #d4af37;
-            margin-right: 6px;
-            font-style: normal;
-        }
-        
-        /* Provider-bridge.js hatalarını konsolda gizle */
-        .no-provider-errors {
-            display: none;
+            bottom: 20px;
+            left: 20px;
+            color: #666;
+            font-size: 0.7rem;
+            background: rgba(0,0,0,0.3);
+            padding: 4px 12px;
+            border-radius: 20px;
         }
     </style>
 </head>
 <body>
-    <!-- Ana 3D Görüntüleyici -->
     <div id="viewer-container"></div>
+    <div id="toggle-panel">🔷</div>
     
-    <!-- Mobil Panel Butonu -->
-    <div id="toggle-panel">⚔️</div>
-    
-    <!-- Kontrol Paneli (TÜM ÖZELLİKLER) -->
     <div id="control-panel">
         <div class="panel-header">
-            <h1>🔷 LAMENT</h1>
-            <div class="subtitle">Configuration • Hellraiser Puzzle Box</div>
+            <h2>LAMENT</h2>
         </div>
         
-        <!-- MODEL SEÇİMİ -->
-        <div class="control-section">
-            <div class="section-title">📦 SELECT VESSEL</div>
-            <select id="modelSelect">
-                <option value="models/Lament_Configuration_Cube-3x3x3P.stl">The Positive Cube (3x3x3P)</option>
-                <option value="models/Lament_Configuration_Cube-3x3x3N.stl">The Negative Cube (3x3x3N)</option>
-                <option value="models/Lament_Configuration_3x3x3_Positive.stl">3x3x3 Positive Relief</option>
-                <option value="models/Lament_Configuration_3x3x3_Negative.stl">3x3x3 Negative Relief</option>
-                <option value="models/Lament_Configuration_3x3x3_Positive_A.stl" selected>Positive A (The Crouching Man)</option>
-                <option value="models/Lament_Configuration_3x3x3_Positive_B.stl">Positive B (The Beautiful Woman)</option>
-                <option value="models/Puzzle_Cube_3x3C.stl">Puzzle Cube Core (Mechanism)</option>
-                <option value="models/Puzzle_Cube_3x3CH.stl">Puzzle Cube CH</option>
-                <option value="models/Puzzle_Cube_3x3N.stl">Puzzle Cube Negative</option>
-                <option value="models/Puzzle_Cube_3x3P.stl">Puzzle Cube Positive</option>
-            </select>
-            
-            <input type="color" id="colorPicker" value="#b8860b">
+        <select id="modelSelect">
+            <option value="models/Lament_Configuration_Cube-3x3x3P.stl">Cube 3x3x3P</option>
+            <option value="models/Lament_Configuration_Cube-3x3x3N.stl">Cube 3x3x3N</option>
+            <option value="models/Lament_Configuration_3x3x3_Positive.stl">3x3x3 Positive</option>
+            <option value="models/Lament_Configuration_3x3x3_Negative.stl">3x3x3 Negative</option>
+            <option value="models/Lament_Configuration_3x3x3_Positive_A.stl" selected>Positive A</option>
+            <option value="models/Lament_Configuration_3x3x3_Positive_B.stl">Positive B</option>
+        </select>
+        
+        <input type="color" id="colorPicker" value="#b8860b">
+        
+        <div class="button-grid">
+            <button id="viewFlat" class="btn active">FLAT</button>
+            <button id="viewSmooth" class="btn">SMOOTH</button>
+            <button id="viewWireframe" class="btn">WIRE</button>
+            <button id="viewEdges" class="btn">EDGES</button>
+            <button id="toggleRotate" class="btn">ROTATE</button>
+            <button id="toggleGrid" class="btn">GRID</button>
+            <button id="resetView" class="btn">VIEW</button>
+            <button id="resetRotation" class="btn">ROT</button>
         </div>
         
-        <!-- GÖRÜNÜM MODLARI (TAMAMI) -->
-        <div class="control-section">
-            <div class="section-title">👁️ SURFACE REVELATION</div>
-            <div class="button-grid">
-                <button id="viewFlat" class="btn active">FLAT</button>
-                <button id="viewSmooth" class="btn">SMOOTH</button>
-                <button id="viewWireframe" class="btn">WIREFRAME</button>
-                <button id="viewEdges" class="btn">EDGES</button>
-            </div>
-        </div>
-        
-        <!-- SAHNE KONTROLLERİ -->
-        <div class="control-section">
-            <div class="section-title">⚙️ MANIPULATIONS</div>
-            <div class="button-grid">
-                <button id="toggleRotate" class="btn">🔄 AUTO ROTATE</button>
-                <button id="toggleGrid" class="btn">📐 GRID</button>
-                <button id="toggleAxes" class="btn">📏 AXES</button>
-                <button id="toggleBoundingBox" class="btn">📦 BOUNDING BOX</button>
-                <button id="resetView" class="btn">⟲ RESET VIEW</button>
-                <button id="resetRotation" class="btn">↺ RESET ROTATION</button>
-                <button id="zoomIn" class="btn">🔍 ZOOM IN</button>
-                <button id="zoomOut" class="btn">🔎 ZOOM OUT</button>
-            </div>
-        </div>
-        
-        <!-- ANİMASYON KONTROLLERİ -->
-        <div class="control-section">
-            <div class="section-title">🌀 MYSTIC MOTIONS</div>
-            <div class="button-grid">
-                <button id="animatePulse" class="btn">💫 PULSE</button>
-                <button id="animateSpin" class="btn">⚡ SPIN</button>
-                <button id="animateFloat" class="btn">✨ FLOAT</button>
-                <button id="stopAnimation" class="btn">⏹️ STOP</button>
-            </div>
-        </div>
-        
-        <!-- MODEL BİLGİLERİ -->
         <div class="info-panel">
             <div class="info-row">
-                <span class="info-label">Current Vessel</span>
-                <span class="info-value" id="currentModelName">Positive A</span>
+                <span>Model:</span>
+                <span id="currentModelName">Positive A</span>
             </div>
             <div class="loading-container">
                 <div class="loading-progress" id="loadingProgress"></div>
             </div>
             <div class="info-row">
-                <span class="info-label">Status</span>
-                <span class="info-value" id="status">Awakening...</span>
+                <span>Status:</span>
+                <span id="status">Ready</span>
             </div>
-            <div class="info-row">
-                <span class="info-label">Triangles</span>
-                <span class="info-value" id="trianglesCount">-</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">Volume</span>
-                <span class="info-value" id="volumeInfo">-</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">Original Design</span>
-                <span class="info-value">Simon Sayce</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">3D Artifact</span>
-                <span class="info-value">metatronslove</span>
-            </div>
-        </div>
-        
-        <!-- DRAG & DROP BİLGİSİ -->
-        <div style="text-align: center; margin: 10px 0; color: #8a6e45; font-size: 0.8rem; border: 1px dashed #8a6e45; padding: 8px; border-radius: 30px;">
-            📥 Drag & drop your own STL files here
-        </div>
-        
-        <!-- KAYNAKÇA -->
-        <div class="footer-links">
-            <a href="https://github.com/metatronslove/lament" target="_blank">🔷 SOURCE</a> •
-            <a href="https://www.viewstl.com/plugin/" target="_blank">VIEWSTL</a> •
-            <a href="https://threejs.org/" target="_blank">THREE.JS</a>
         </div>
     </div>
     
-    <!-- Sağ Alt İmza -->
-    <div class="signature">
-        <i>🔷</i> metatronslove • Hellraiser Tribute
+    <div class="bmc-container">
+        <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="metatronslove" data-description="Support me on Buy me a coffee!" data-color="#FFDD00" data-position="right" data-x_margin="18" data-y_margin="18"></script>
     </div>
     
-    <!-- Console hatalarını gizle (provider-bridge.js) -->
-    <script>
-        // Provider-bridge.js hatalarını konsolda gizle
-        const originalConsoleError = console.error;
-        console.error = function(...args) {
-            if (args[0] && typeof args[0] === 'string' && 
-                (args[0].includes('provider-bridge') || 
-                 args[0].includes('pelagus') ||
-                 args[0].includes('favicon'))) {
-                return;
-            }
-            originalConsoleError.apply(console, args);
-        };
-        
-        // Favicon 404'ü engelle
-        if (!document.querySelector('link[rel="icon"]')) {
-            const link = document.createElement('link');
-            link.rel = 'icon';
-            link.href = 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔷</text></svg>';
-            document.head.appendChild(link);
-        }
-    </script>
+    <div class="signature">metatronslove</div>
     
     <script>
         (function() {
-            // ===== TÜM ÖZELLİKLER AKTİF =====
             const container = document.getElementById('viewer-container');
             let viewer = null;
-            let viewerReady = false;
-            let pendingModelLoad = null;
+            let modelLoaded = false;
             
-            // Tüm model dosyaları (Lament + Puzzle)
             const modelFiles = [
                 "models/Lament_Configuration_Cube-3x3x3P.stl",
                 "models/Lament_Configuration_Cube-3x3x3N.stl",
                 "models/Lament_Configuration_3x3x3_Positive.stl",
                 "models/Lament_Configuration_3x3x3_Negative.stl",
                 "models/Lament_Configuration_3x3x3_Positive_A.stl",
-                "models/Lament_Configuration_3x3x3_Positive_B.stl",
-                "models/Puzzle_Cube_3x3C.stl",
-                "models/Puzzle_Cube_3x3CH.stl",
-                "models/Puzzle_Cube_3x3N.stl",
-                "models/Puzzle_Cube_3x3P.stl"
+                "models/Lament_Configuration_3x3x3_Positive_B.stl"
             ];
             
-            const modelDisplayNames = [
-                "The Positive Cube",
-                "The Negative Cube",
-                "3x3x3 Positive",
-                "3x3x3 Negative",
-                "Positive A (Crouching Man)",
-                "Positive B (Beautiful Woman)",
-                "Puzzle Cube Core",
-                "Puzzle Cube CH",
-                "Puzzle Cube Negative",
-                "Puzzle Cube Positive"
-            ];
+            // Worker hatasını engelle - load_stl.min.js'i manuel yükle
+            if (typeof window.Worker === 'undefined') {
+                console.warn('Web Workers not supported');
+            }
             
-            // Animation state
-            let animationInterval = null;
-            let currentAnimation = null;
-            
-            // ===== VIEWER BAŞLAT (TÜM CALLBACK'LER AKTİF) =====
             function initViewer() {
                 try {
                     viewer = new StlViewer(container, {
                         bgcolor: "#0a0a0a",
-                        canvas_width: "100%",
-                        canvas_height: "100%",
                         auto_resize: true,
                         mouse_zoom: true,
                         allow_drag_and_drop: true,
-                        controls: 0, // OrbitControls
-                        
-                        // TÜM CALLBACK'LER
-                        ready_callback: function() {
-                            viewerReady = true;
-                            document.getElementById('status').innerText = 'The Box Awaits';
-                            if (pendingModelLoad !== null) {
-                                loadModelByIndex(pendingModelLoad);
-                                pendingModelLoad = null;
-                            }
-                        },
                         
                         all_loaded_callback: function() {
+                            modelLoaded = true;
                             document.getElementById('status').innerText = 'Ready';
                             document.getElementById('loadingProgress').style.width = '100%';
-                            updateModelInfo();
                         },
                         
-                        model_loaded_callback: function(model_id) {
-                            document.getElementById('status').innerText = 'Vessel Materialized';
-                            document.getElementById('loadingProgress').style.width = '100%';
-                            updateModelInfo();
-                        },
-                        
-                        loading_progress_callback: function(load_status, load_session) {
-                            if (load_status && load_status.length > 0) {
-                                const status = load_status[0];
-                                if (status.total > 0) {
-                                    const percent = (status.loaded / status.total) * 100;
-                                    document.getElementById('loadingProgress').style.width = percent + '%';
-                                    document.getElementById('status').innerText = 'Summoning... ' + Math.round(percent) + '%';
-                                }
+                        loading_progress_callback: function(load_status) {
+                            if (load_status && load_status[0]) {
+                                const pct = (load_status[0].loaded / load_status[0].total) * 100;
+                                document.getElementById('loadingProgress').style.width = pct + '%';
+                                document.getElementById('status').innerText = 'Loading ' + Math.round(pct) + '%';
                             }
-                        },
-                        
-                        load_error_callback: function(error_str) {
-                            document.getElementById('status').innerText = 'The Box Resists';
-                            console.warn('STL load warning:', error_str);
-                        },
-                        
-                        on_model_drop: function(filename) {
-                            document.getElementById('status').innerText = 'Offering received...';
-                        },
-                        
-                        on_model_mouseclick: function(model_id, e, distance, click_type) {
-                            console.log('Model clicked:', model_id, 'click type:', click_type);
                         }
                     });
                     
-                    // Başlangıç ayarları
-                    viewer.set_grid(false);
-                    viewer.set_edges(0, false);
-                    
-                    // Varsayılan modeli yükle (index 4)
-                    if (viewerReady) {
-                        loadModelByIndex(4);
-                    } else {
-                        pendingModelLoad = 4;
+                    // Model yükleme fonksiyonu
+                    function loadModel(index) {
+                        if (!viewer) return;
+                        
+                        const filename = modelFiles[index];
+                        document.getElementById('loadingProgress').style.width = '0%';
+                        document.getElementById('status').innerText = 'Loading...';
+                        
+                        // Önceki modeli kaldır (hata vermesin)
+                        try { viewer.remove_model(0); } catch(e) {}
+                        
+                        // Yeni model ekle
+                        viewer.add_model({
+                            id: 0,
+                            filename: filename,
+                            color: document.getElementById('colorPicker').value,
+                            display: 'flat'
+                        });
                     }
                     
+                    // Varsayılan model (Positive A)
+                    setTimeout(() => loadModel(4), 500);
+                    
+                    // Event listeners
+                    document.getElementById('modelSelect').addEventListener('change', function(e) {
+                        loadModel(e.target.selectedIndex);
+                    });
+                    
+                    document.getElementById('colorPicker').addEventListener('input', function(e) {
+                        if (viewer && modelLoaded) {
+                            try { viewer.set_color(0, e.target.value); } catch(e) {}
+                        }
+                    });
+                    
+                    document.getElementById('viewFlat').addEventListener('click', function() {
+                        if (!viewer || !modelLoaded) return;
+                        try { viewer.set_display(0, 'flat'); } catch(e) {}
+                        document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                    });
+                    
+                    document.getElementById('viewSmooth').addEventListener('click', function() {
+                        if (!viewer || !modelLoaded) return;
+                        try { viewer.set_display(0, 'smooth'); } catch(e) {}
+                        document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                    });
+                    
+                    document.getElementById('viewWireframe').addEventListener('click', function() {
+                        if (!viewer || !modelLoaded) return;
+                        try { viewer.set_display(0, 'wireframe'); } catch(e) {}
+                        document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                    });
+                    
+                    let edges = false;
+                    document.getElementById('viewEdges').addEventListener('click', function() {
+                        if (!viewer || !modelLoaded) return;
+                        edges = !edges;
+                        try { viewer.set_edges(0, edges); } catch(e) {}
+                        this.classList.toggle('active', edges);
+                    });
+                    
+                    let grid = false;
+                    document.getElementById('toggleGrid').addEventListener('click', function() {
+                        if (!viewer || !modelLoaded) return;
+                        grid = !grid;
+                        try { viewer.set_grid(grid, 100, 10); } catch(e) {}
+                        this.classList.toggle('active', grid);
+                    });
+                    
+                    let rotate = false;
+                    document.getElementById('toggleRotate').addEventListener('click', function() {
+                        if (!viewer || !modelLoaded) return;
+                        rotate = !rotate;
+                        try { viewer.set_auto_rotate(rotate); } catch(e) {}
+                        this.classList.toggle('active', rotate);
+                    });
+                    
+                    document.getElementById('resetView').addEventListener('click', function() {
+                        if (!viewer || !modelLoaded) return;
+                        try { viewer.set_auto_resize(true); } catch(e) {}
+                    });
+                    
+                    document.getElementById('resetRotation').addEventListener('click', function() {
+                        if (!viewer || !modelLoaded) return;
+                        try { viewer.rotate(0, 0, 0, 0); } catch(e) {}
+                    });
+                    
                 } catch (e) {
-                    console.warn('Viewer init retry...');
+                    console.warn('Retrying...');
                     setTimeout(initViewer, 1000);
                 }
             }
             
-            // Model bilgilerini güncelle
-            function updateModelInfo() {
-                if (!viewer || !viewerReady) return;
-                try {
-                    let info = viewer.get_model_info(0);
-                    if (info) {
-                        document.getElementById('trianglesCount').innerText = info.triangles || '-';
-                        document.getElementById('volumeInfo').innerText = info.volume ? info.volume.toFixed(2) + ' mm³' : '-';
-                    }
-                } catch(e) {}
-            }
-            
-            // Model yükle
-            function loadModelByIndex(index) {
-                if (!viewer) {
-                    pendingModelLoad = index;
-                    return;
-                }
-                
-                if (!viewerReady) {
-                    pendingModelLoad = index;
-                    return;
-                }
-                
-                const filename = modelFiles[index];
-                const displayName = modelDisplayNames[index];
-                const colorVal = document.getElementById('colorPicker').value;
-                
-                document.getElementById('loadingProgress').style.width = '0%';
-                document.getElementById('status').innerText = 'Summoning... 0%';
-                document.getElementById('currentModelName').innerText = displayName;
-                
-                try {
-                    try { viewer.remove_model(0); } catch(e) {}
-                    
-                    viewer.add_model({
-                        id: 0,
-                        filename: filename,
-                        color: colorVal,
-                        display: 'flat',
-                        rotationx: 0,
-                        rotationy: 0,
-                        rotationz: 0,
-                        scale: 1.0
-                    });
-                } catch (e) {
-                    console.warn('Model load error:', e);
-                }
-            }
-            
-            // Animasyon fonksiyonları
-            function startPulseAnimation() {
-                stopAnimation();
-                let scale = 1.0;
-                let increasing = true;
-                animationInterval = setInterval(() => {
-                    if (!viewer || !viewerReady) return;
-                    if (increasing) {
-                        scale += 0.01;
-                        if (scale >= 1.1) increasing = false;
-                    } else {
-                        scale -= 0.01;
-                        if (scale <= 0.9) increasing = true;
-                    }
-                    try { viewer.set_scale(0, scale, scale, scale); } catch(e) {}
-                }, 50);
-                currentAnimation = 'pulse';
-            }
-            
-            function startSpinAnimation() {
-                stopAnimation();
-                let rotation = 0;
-                animationInterval = setInterval(() => {
-                    if (!viewer || !viewerReady) return;
-                    rotation += 0.02;
-                    try { viewer.rotate(0, rotation, rotation/2, rotation); } catch(e) {}
-                }, 50);
-                currentAnimation = 'spin';
-            }
-            
-            function startFloatAnimation() {
-                stopAnimation();
-                let yPos = 0;
-                let increasing = true;
-                animationInterval = setInterval(() => {
-                    if (!viewer || !viewerReady) return;
-                    if (increasing) {
-                        yPos += 0.5;
-                        if (yPos >= 20) increasing = false;
-                    } else {
-                        yPos -= 0.5;
-                        if (yPos <= -20) increasing = true;
-                    }
-                    try { viewer.set_position(0, 0, yPos, 0); } catch(e) {}
-                }, 50);
-                currentAnimation = 'float';
-            }
-            
-            function stopAnimation() {
-                if (animationInterval) {
-                    clearInterval(animationInterval);
-                    animationInterval = null;
-                }
-                if (viewer && viewerReady) {
-                    try {
-                        viewer.set_scale(0, 1, 1, 1);
-                        viewer.set_position(0, 0, 0, 0);
-                    } catch(e) {}
-                }
-                currentAnimation = null;
-            }
-            
-            // ===== EVENT LİSTENERS (TÜM BUTONLAR AKTİF) =====
-            document.getElementById('modelSelect').addEventListener('change', function(e) {
-                loadModelByIndex(e.target.selectedIndex);
-            });
-            
-            document.getElementById('colorPicker').addEventListener('input', function(e) {
-                if (viewer && viewerReady) {
-                    try { viewer.set_color(0, e.target.value); } catch(e) {}
-                }
-            });
-            
-            // Görünüm modları
-            document.getElementById('viewFlat').addEventListener('click', function() {
-                if (!viewer || !viewerReady) return;
-                try {
-                    viewer.set_display(0, 'flat');
-                    document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                } catch(e) {}
-            });
-            
-            document.getElementById('viewSmooth').addEventListener('click', function() {
-                if (!viewer || !viewerReady) return;
-                try {
-                    viewer.set_display(0, 'smooth');
-                    document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                } catch(e) {}
-            });
-            
-            document.getElementById('viewWireframe').addEventListener('click', function() {
-                if (!viewer || !viewerReady) return;
-                try {
-                    viewer.set_display(0, 'wireframe');
-                    document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                } catch(e) {}
-            });
-            
-            let edgesVisible = false;
-            document.getElementById('viewEdges').addEventListener('click', function() {
-                if (!viewer || !viewerReady) return;
-                edgesVisible = !edgesVisible;
-                try {
-                    viewer.set_edges(0, edgesVisible);
-                    this.classList.toggle('active', edgesVisible);
-                } catch(e) {}
-            });
-            
-            let gridVisible = false;
-            document.getElementById('toggleGrid').addEventListener('click', function() {
-                if (!viewer || !viewerReady) return;
-                gridVisible = !gridVisible;
-                try {
-                    viewer.set_grid(gridVisible, 150, 20);
-                    this.classList.toggle('active', gridVisible);
-                } catch(e) {}
-            });
-            
-            let axesVisible = false;
-            document.getElementById('toggleAxes').addEventListener('click', function() {
-                if (!viewer || !viewerReady) return;
-                axesVisible = !axesVisible;
-                // ViewSTL'de axes metodu var mı? Alternatif grid
-                this.classList.toggle('active', axesVisible);
-            });
-            
-            let boundingBoxVisible = false;
-            document.getElementById('toggleBoundingBox').addEventListener('click', function() {
-                if (!viewer || !viewerReady) return;
-                boundingBoxVisible = !boundingBoxVisible;
-                this.classList.toggle('active', boundingBoxVisible);
-            });
-            
-            let autoRotate = false;
-            document.getElementById('toggleRotate').addEventListener('click', function() {
-                if (!viewer || !viewerReady) return;
-                autoRotate = !autoRotate;
-                try {
-                    viewer.set_auto_rotate(autoRotate);
-                    this.classList.toggle('active', autoRotate);
-                } catch(e) {}
-            });
-            
-            document.getElementById('resetView').addEventListener('click', function() {
-                if (!viewer || !viewerReady) return;
-                try {
-                    viewer.set_auto_resize(true);
-                    window.dispatchEvent(new Event('resize'));
-                } catch(e) {}
-            });
-            
-            document.getElementById('resetRotation').addEventListener('click', function() {
-                if (!viewer || !viewerReady) return;
-                try {
-                    viewer.rotate(0, 0, 0, 0);
-                } catch(e) {}
-            });
-            
-            document.getElementById('zoomIn').addEventListener('click', function() {
-                if (!viewer || !viewerReady) return;
-                try {
-                    let zoom = viewer.get_camera_state().position.z;
-                    viewer.set_zoom(zoom - 10);
-                } catch(e) {}
-            });
-            
-            document.getElementById('zoomOut').addEventListener('click', function() {
-                if (!viewer || !viewerReady) return;
-                try {
-                    let zoom = viewer.get_camera_state().position.z;
-                    viewer.set_zoom(zoom + 10);
-                } catch(e) {}
-            });
-            
-            // Animasyon butonları
-            document.getElementById('animatePulse').addEventListener('click', startPulseAnimation);
-            document.getElementById('animateSpin').addEventListener('click', startSpinAnimation);
-            document.getElementById('animateFloat').addEventListener('click', startFloatAnimation);
-            document.getElementById('stopAnimation').addEventListener('click', stopAnimation);
-            
-            // Mobile panel toggle
+            // Mobile panel
             const panel = document.getElementById('control-panel');
-            const toggleBtn = document.getElementById('toggle-panel');
-            toggleBtn.addEventListener('click', function() {
+            document.getElementById('toggle-panel').addEventListener('click', function() {
                 panel.classList.toggle('visible');
             });
             
