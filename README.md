@@ -27,7 +27,7 @@ Ben sadece bu harika çalışmaları bir araya getirip, web üzerinde kolayca g�
 ## 🚀 Canlı Demo
 
 Projeyi hemen inceleyin:  
-[https://kullaniciadi.github.io/lament/docs/](https://kullaniciadi.github.io/lament/docs/)
+[https://metatronslove.github.io/lament/docs/](https://metatronslove.github.io/lament/docs/)
 
 ## 🙏 Teşekkür
 

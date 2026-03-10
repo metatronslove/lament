@@ -5,14 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Lament Configuration - Hellraiser Puzzle Box 3D Viewer</title>
     
-    <!-- Open Graph / Facebook / Discord / LinkedIn -->
+    <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://[kullaniciadi].github.io/lament/">
     <meta property="og:title" content="Lament Configuration - 3D Puzzle Box">
-    <meta property="og:description" content="Hellraiser filmindeki ikonik Lament Configuration kutusunun interaktif 3D görüntüleyicisi. STL dosyalarını keşfedin!">
+    <meta property="og:description" content="Hellraiser filmindeki ikonik Lament Configuration kutusunun interaktif 3D görüntüleyicisi">
     <meta property="og:image" content="https://[kullaniciadi].github.io/lament/docs/social-preview.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
@@ -37,7 +35,6 @@
             position: fixed;
         }
 
-        /* Ana görüntüleyici */
         #viewer-container {
             width: 100vw;
             height: 100vh;
@@ -48,146 +45,109 @@
             z-index: 1;
         }
 
-        /* Sol kontrol paneli - mobilde otomatik gizlenen */
         #control-panel {
             position: absolute;
             top: 20px;
             left: 20px;
-            width: min(300px, calc(100vw - 40px));
-            max-height: calc(100vh - 100px);
-            background: rgba(20, 20, 25, 0.85);
+            width: min(320px, calc(100vw - 40px));
+            max-height: calc(100vh - 40px);
+            background: rgba(20, 20, 25, 0.95);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-radius: 20px;
-            padding: 20px 16px;
+            border-radius: 24px;
+            padding: 24px 20px;
             border: 1px solid rgba(180, 135, 20, 0.3);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
             z-index: 10;
             overflow-y: auto;
-            transition: transform 0.3s ease, opacity 0.3s ease;
             pointer-events: auto;
-        }
-
-        /* Mobilde paneli gizleme butonu */
-        #toggle-panel {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 44px;
-            height: 44px;
-            background: rgba(20, 20, 25, 0.9);
-            backdrop-filter: blur(8px);
-            border: 1px solid #b8860b;
-            border-radius: 12px;
-            color: #b8860b;
-            font-size: 24px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 15;
-            transition: all 0.2s;
-        }
-
-        #toggle-panel:hover {
-            background: #b8860b;
-            color: #0a0a0a;
+            transition: transform 0.3s ease;
         }
 
         @media (max-width: 768px) {
             #control-panel {
                 transform: translateX(-120%);
-                opacity: 0;
-                top: 80px;
             }
             #control-panel.visible {
                 transform: translateX(0);
-                opacity: 1;
-            }
-            #toggle-panel {
-                display: flex;
             }
         }
 
-        /* Başlık */
         .panel-header {
             text-align: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 12px;
+            margin-bottom: 24px;
         }
 
         .panel-header h1 {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 500;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             color: #d4af37;
-            text-shadow: 0 0 10px rgba(180, 135, 20, 0.3);
+            text-shadow: 0 0 15px rgba(180, 135, 20, 0.5);
             margin-bottom: 4px;
         }
 
         .panel-header .subtitle {
-            font-size: 0.8rem;
-            color: #999;
+            font-size: 0.75rem;
+            color: #888;
             font-style: italic;
         }
 
-        /* Form elemanları */
-        .control-group {
-            margin-bottom: 20px;
+        .control-section {
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #2a2a35;
         }
 
-        .control-label {
-            display: block;
-            font-size: 0.8rem;
+        .control-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #aaa;
-            margin-bottom: 8px;
-            border-left: 3px solid #b8860b;
-            padding-left: 8px;
+            letter-spacing: 2px;
+            color: #b8860b;
+            margin-bottom: 16px;
+            font-weight: 500;
         }
 
         select, input[type="color"] {
             width: 100%;
-            padding: 12px 16px;
-            background: rgba(0, 0, 0, 0.4);
+            padding: 14px 16px;
+            background: rgba(0, 0, 0, 0.6);
             border: 1px solid #3a3a4a;
-            border-radius: 12px;
+            border-radius: 16px;
             color: white;
-            font-size: 1rem;
+            font-size: 0.95rem;
             cursor: pointer;
             transition: all 0.2s;
             -webkit-appearance: none;
             appearance: none;
+            margin-bottom: 8px;
         }
 
         select {
             background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22%23b8860b%22%3E%3Cpath%20d%3D%22M7%2010l5%205%205-5z%22%2F%3E%3C%2Fsvg%3E");
             background-repeat: no-repeat;
-            background-position: right 12px center;
+            background-position: right 16px center;
             background-size: 20px;
         }
 
-        select:hover, input[type="color"]:hover {
-            border-color: #b8860b;
-            background-color: rgba(30, 30, 40, 0.8);
-        }
-
-        /* Buton grid */
         .button-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-top: 12px;
+            gap: 10px;
         }
 
         .btn {
-            padding: 12px 8px;
-            background: rgba(30, 30, 40, 0.8);
+            padding: 14px 8px;
+            background: rgba(30, 30, 40, 0.9);
             border: 1px solid #3a3a4a;
             color: #ddd;
-            border-radius: 10px;
+            border-radius: 14px;
             font-size: 0.85rem;
             font-weight: 500;
             cursor: pointer;
@@ -196,14 +156,13 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            -webkit-tap-highlight-color: transparent;
         }
 
         .btn.active {
             background: #b8860b;
             border-color: #d4af37;
             color: #0a0a0a;
-            box-shadow: 0 0 15px rgba(180, 135, 20, 0.5);
+            box-shadow: 0 0 20px rgba(180, 135, 20, 0.6);
         }
 
         .btn:hover {
@@ -211,21 +170,19 @@
             background: rgba(50, 50, 65, 0.9);
         }
 
-        /* Model bilgi kartı */
-        .info-card {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 16px;
+        .info-panel {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 18px;
             padding: 16px;
-            margin: 20px 0;
+            margin: 16px 0;
             border: 1px solid #2a2a35;
-            font-size: 0.9rem;
         }
 
         .info-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
-            padding-bottom: 8px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
             border-bottom: 1px dashed #333;
         }
 
@@ -237,30 +194,48 @@
 
         .info-label {
             color: #999;
+            font-size: 0.85rem;
         }
 
         .info-value {
             color: #d4af37;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .loading-bar {
+            width: 100%;
+            height: 4px;
+            background: #2a2a35;
+            border-radius: 4px;
+            margin: 16px 0 8px 0;
+            overflow: hidden;
+        }
+
+        .loading-progress {
+            width: 0%;
+            height: 100%;
+            background: #b8860b;
+            transition: width 0.3s ease;
         }
 
         #status {
             color: #b8860b;
             font-size: 0.8rem;
-            animation: pulse 2s infinite;
+            text-align: center;
+            font-weight: 500;
         }
 
-        @keyframes pulse {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
+        /* Buy Me A Coffee Widget - ORİJİNAL */
+        .bmc-btn-container {
+            margin: 20px 0 10px 0;
+            text-align: center;
         }
 
-        /* Footer / Kaynaklar */
         .footer-links {
             text-align: center;
             margin-top: 20px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #666;
         }
 
@@ -268,29 +243,45 @@
             color: #888;
             text-decoration: none;
             transition: color 0.2s;
-            margin: 0 4px;
+            margin: 0 6px;
         }
 
         .footer-links a:hover {
             color: #b8860b;
-            text-decoration: underline;
         }
 
-        /* Buy Me A Coffee Widget Konteynırı */
-        #bmc-widget {
-            margin-top: 20px;
-            display: flex;
+        #toggle-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 48px;
+            height: 48px;
+            background: rgba(20, 20, 25, 0.95);
+            backdrop-filter: blur(8px);
+            border: 1px solid #b8860b;
+            border-radius: 14px;
+            color: #b8860b;
+            font-size: 24px;
+            display: none;
+            align-items: center;
             justify-content: center;
+            cursor: pointer;
+            z-index: 15;
         }
 
-        /* Sağ alt köşe bilgi */
+        @media (max-width: 768px) {
+            #toggle-panel {
+                display: flex;
+            }
+        }
+
         .corner-credit {
             position: absolute;
             bottom: 20px;
             right: 20px;
-            background: rgba(20, 20, 25, 0.6);
+            background: rgba(20, 20, 25, 0.7);
             backdrop-filter: blur(4px);
-            padding: 6px 14px;
+            padding: 8px 16px;
             border-radius: 30px;
             font-size: 0.7rem;
             border: 1px solid #333;
@@ -298,20 +289,9 @@
             z-index: 5;
             pointer-events: none;
         }
-
-        .corner-credit i {
-            color: #b8860b;
-            margin-right: 4px;
-        }
-
-        /* Canvas'ın tıklanabilir olması önemli */
-        canvas {
-            display: block;
-            outline: none;
-        }
     </style>
 
-    <!-- ViewSTL ve Three.js kütüphaneleri (yerel js/ klasöründen) -->
+    <!-- ViewSTL ve Three.js -->
     <script src="js/three.min.js"></script>
     <script src="js/stl_viewer.min.js"></script>
     <script src="js/OrbitControls.js"></script>
@@ -319,24 +299,23 @@
     <script src="js/Projector.js"></script>
     <script src="js/CanvasRenderer.js"></script>
     <script src="js/webgl_detector.js"></script>
+    
+    <!-- Buy Me A Coffee Widget - ORİJİNAL SCRIPT -->
+    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="metatronslove" data-description="Support me on Buy me a coffee!" data-message="Bu harika modelleri beğendiyseniz kahve ısmarlayın!" data-color="#FFDD00" data-position="right" data-x_margin="18" data-y_margin="18"></script>
 </head>
 <body>
-    <!-- Ana 3D Görüntüleyici Alanı -->
     <div id="viewer-container"></div>
 
-    <!-- Mobil için panel açma/kapama butonu -->
     <div id="toggle-panel">☰</div>
 
-    <!-- Sol Kontrol Paneli -->
     <div id="control-panel">
         <div class="panel-header">
             <h1>🔷 LAMENT CONFIGURATION</h1>
             <div class="subtitle">Hellraiser Puzzle Box - 3D Viewer</div>
         </div>
 
-        <!-- Model Seçici -->
-        <div class="control-group">
-            <div class="control-label">📦 Model Seç</div>
+        <div class="control-section">
+            <div class="section-title">📦 MODEL SEÇİMİ</div>
             <select id="modelSelect">
                 <option value="Lament_Configuration_Cube-3x3x3P.stl">Pozitif Küp (3x3x3P)</option>
                 <option value="Lament_Configuration_Cube-3x3x3N.stl">Negatif Küp (3x3x3N)</option>
@@ -345,77 +324,70 @@
                 <option value="Lament_Configuration_3x3x3_Positive_A.stl" selected>Pozitif A (Önerilen)</option>
                 <option value="Lament_Configuration_3x3x3_Positive_B.stl">Pozitif B</option>
             </select>
-        </div>
-
-        <!-- Renk Seçici -->
-        <div class="control-group">
-            <div class="control-label">🎨 Model Rengi</div>
             <input type="color" id="colorPicker" value="#b8860b">
         </div>
 
-        <!-- Görünüm Modları -->
-        <div class="control-group">
-            <div class="control-label">👁️ Görünüm</div>
+        <div class="control-section">
+            <div class="section-title">👁️ GÖRÜNÜM</div>
             <div class="button-grid">
-                <button id="viewFlat" class="btn active">▣ Düz</button>
-                <button id="viewSmooth" class="btn">⚪ Yumuşak</button>
-                <button id="viewWireframe" class="btn">🕸️ Tel Kafes</button>
-                <button id="toggleGrid" class="btn">📐 Izgara</button>
+                <button id="viewFlat" class="btn active">Düz</button>
+                <button id="viewSmooth" class="btn">Yumuşak</button>
+                <button id="viewWireframe" class="btn">Tel Kafes</button>
+                <button id="toggleGrid" class="btn">Izgara</button>
             </div>
         </div>
 
-        <!-- Kontroller -->
-        <div class="control-group">
-            <div class="control-label">⚙️ Kontroller</div>
+        <div class="control-section">
+            <div class="section-title">⚙️ KONTROLLER</div>
             <div class="button-grid">
-                <button id="toggleRotate" class="btn">🔄 Oto Döndür</button>
-                <button id="resetView" class="btn">⟲ Sıfırla</button>
+                <button id="toggleRotate" class="btn">Otomatik Döndür</button>
+                <button id="resetView" class="btn">Görünümü Sıfırla</button>
             </div>
         </div>
 
-        <!-- Model Bilgileri -->
-        <div class="info-card">
+        <!-- Yükleme Durumu ve Bilgi Paneli -->
+        <div class="info-panel">
             <div class="info-row">
                 <span class="info-label">Aktif Model:</span>
                 <span class="info-value" id="currentModelName">Pozitif A</span>
             </div>
+            <div class="loading-bar">
+                <div class="loading-progress" id="loadingProgress"></div>
+            </div>
             <div class="info-row">
                 <span class="info-label">Durum:</span>
-                <span class="info-value" id="status">Hazır</span>
+                <span class="info-value" id="status">Yükleniyor...</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Orijinal Tasarım:</span>
                 <span class="info-value">Simon Sayce</span>
             </div>
+            <div class="info-row">
+                <span class="info-label">3D Model:</span>
+                <span class="info-value">metatronslove</span>
+            </div>
         </div>
 
-        <!-- Buy Me A Coffee Widget -->
-        <div id="bmc-widget"></div>
-
-        <!-- Kaynakça ve Bağlantılar -->
+        <!-- Referanslar -->
         <div class="footer-links">
-            <a href="#" target="_blank" id="githubRepoLink">GitHub</a> •
             <a href="https://github.com/metatronslove/lament" target="_blank">Orijinal Model</a> •
-            <a href="https://www.viewstl.com/plugin/" target="_blank">ViewSTL</a><br>
-            <a href="https://buymeacoffee.com/metatronslove" target="_blank" style="color:#b8860b;">☕ Model Yaratıcısına Bağış Yap</a>
+            <a href="https://www.viewstl.com/plugin/" target="_blank">ViewSTL</a> •
+            <a href="https://threejs.org/" target="_blank">Three.js</a>
         </div>
     </div>
 
-    <!-- Sağ alt köşe bilgi -->
     <div class="corner-credit">
         <i>🔷</i> Hellraiser Fan Project
     </div>
 
     <script>
         (function() {
-            // --- KONFİGÜRASYON ---
             const container = document.getElementById('viewer-container');
             let viewer;
             let currentModelId = 0;
             let autoRotate = false;
             let gridVisible = false;
 
-            // Model dosyaları ve görünen adları
             const modelFiles = [
                 "Lament_Configuration_Cube-3x3x3P.stl",
                 "Lament_Configuration_Cube-3x3x3N.stl",
@@ -434,7 +406,6 @@
                 "Pozitif B"
             ];
 
-            // --- VIEWER BAŞLATMA ---
             function initViewer() {
                 try {
                     viewer = new StlViewer(container, {
@@ -444,21 +415,46 @@
                         auto_resize: true,
                         allow_drag_and_drop: false,
                         mouse_zoom: true,
-                        load_three_files: false, // Kendimiz yükledik
-                        models: []
+                        load_three_files: false,
+                        models: [],
+                        // Yükleme callback'leri
+                        all_loaded_callback: function() {
+                            document.getElementById('status').innerText = 'Hazır';
+                            document.getElementById('loadingProgress').style.width = '100%';
+                        },
+                        model_loaded_callback: function(model_id) {
+                            document.getElementById('status').innerText = 'Model yüklendi';
+                            document.getElementById('loadingProgress').style.width = '100%';
+                        },
+                        loading_progress_callback: function(load_status, load_session) {
+                            if (load_status && load_status.length > 0) {
+                                const status = load_status[0];
+                                if (status.total > 0) {
+                                    const percent = (status.loaded / status.total) * 100;
+                                    document.getElementById('loadingProgress').style.width = percent + '%';
+                                    document.getElementById('status').innerText = 'Yükleniyor... %' + Math.round(percent);
+                                }
+                            }
+                        },
+                        load_error_callback: function(error_str) {
+                            document.getElementById('status').innerText = 'Yükleme hatası!';
+                            console.error('STL yükleme hatası:', error_str);
+                        }
                     });
 
                     viewer.set_grid(false);
                     
-                    // Varsayılan model: Pozitif A (index 4)
-                    loadModelByIndex(4);
+                    // Varsayılan modeli yükle
+                    setTimeout(() => {
+                        loadModelByIndex(4);
+                    }, 500);
+                    
                 } catch (e) {
                     console.error("Viewer başlatılamadı:", e);
-                    document.getElementById('status').innerText = 'Hata!';
+                    document.getElementById('status').innerText = 'Hata! Sayfayı yenileyin.';
                 }
             }
 
-            // --- MODEL YÜKLEME ---
             function loadModelByIndex(index) {
                 if (!viewer) return;
 
@@ -466,10 +462,15 @@
                 const displayName = modelDisplayNames[index];
                 const colorVal = document.getElementById('colorPicker').value;
 
+                // Progress bar'ı sıfırla
+                document.getElementById('loadingProgress').style.width = '0%';
+                document.getElementById('status').innerText = 'Yükleniyor... %0';
+
                 try {
                     viewer.remove_model(0);
-                } catch(e) { /* ilk seferde yoksa sorun değil */ }
+                } catch(e) { /* ignore */ }
 
+                // Modeli ekle
                 viewer.add_model({
                     id: 0,
                     filename: "models/" + filename,
@@ -482,15 +483,9 @@
                 });
 
                 document.getElementById('currentModelName').innerText = displayName;
-                document.getElementById('status').innerText = 'Yükleniyor...';
-
-                // Model yüklendikten sonra durumu güncelle (gecikmeli)
-                setTimeout(() => {
-                    document.getElementById('status').innerText = 'Hazır';
-                }, 800);
             }
 
-            // --- OLAY DİNLEYİCİLERİ ---
+            // Event listeners
             document.getElementById('modelSelect').addEventListener('change', function(e) {
                 loadModelByIndex(e.target.selectedIndex);
             });
@@ -499,93 +494,56 @@
                 if (viewer) viewer.set_color(0, e.target.value);
             });
 
-            // Görünüm butonları
             document.getElementById('viewFlat').addEventListener('click', function() {
                 if (!viewer) return;
                 viewer.set_display(0, 'flat');
-                [viewFlat, viewSmooth, viewWireframe].forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(btn => btn.classList.remove('active'));
                 this.classList.add('active');
             });
 
             document.getElementById('viewSmooth').addEventListener('click', function() {
                 if (!viewer) return;
                 viewer.set_display(0, 'smooth');
-                [viewFlat, viewSmooth, viewWireframe].forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(btn => btn.classList.remove('active'));
                 this.classList.add('active');
             });
 
             document.getElementById('viewWireframe').addEventListener('click', function() {
                 if (!viewer) return;
                 viewer.set_display(0, 'wireframe');
-                [viewFlat, viewSmooth, viewWireframe].forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(btn => btn.classList.remove('active'));
                 this.classList.add('active');
             });
 
-            // Izgara
             document.getElementById('toggleGrid').addEventListener('click', function() {
                 gridVisible = !gridVisible;
                 viewer.set_grid(gridVisible, 100, 20);
                 this.classList.toggle('active', gridVisible);
             });
 
-            // Otomatik döndür
             document.getElementById('toggleRotate').addEventListener('click', function() {
                 autoRotate = !autoRotate;
                 viewer.set_auto_rotate(autoRotate);
                 this.classList.toggle('active', autoRotate);
             });
 
-            // Sıfırla
             document.getElementById('resetView').addEventListener('click', function() {
                 if (!viewer) return;
                 viewer.rotate(0, 0, 0, 0);
                 viewer.set_auto_resize(true);
                 window.dispatchEvent(new Event('resize'));
-                
-                // Izgara ve oto döndür varsayılan hallerine dön
-                if (gridVisible) {
-                    gridVisible = false;
-                    viewer.set_grid(false);
-                    document.getElementById('toggleGrid').classList.remove('active');
-                }
-                if (autoRotate) {
-                    autoRotate = false;
-                    viewer.set_auto_rotate(false);
-                    document.getElementById('toggleRotate').classList.remove('active');
-                }
             });
 
-            // --- MOBİL PANEL KONTROLÜ ---
+            // Mobile panel toggle
             const panel = document.getElementById('control-panel');
             const toggleBtn = document.getElementById('toggle-panel');
-
+            
             toggleBtn.addEventListener('click', function() {
                 panel.classList.toggle('visible');
                 this.textContent = panel.classList.contains('visible') ? '✕' : '☰';
             });
 
-            // Panel dışına tıklandığında kapat (mobil)
-            document.addEventListener('click', function(event) {
-                if (window.innerWidth <= 768) {
-                    if (!panel.contains(event.target) && !toggleBtn.contains(event.target)) {
-                        panel.classList.remove('visible');
-                        toggleBtn.textContent = '☰';
-                    }
-                }
-            });
-
-            // --- BUY ME A COFFEE WIDGET (manuel) ---
-            const bmcDiv = document.getElementById('bmc-widget');
-            bmcDiv.innerHTML = `
-                <a href="https://buymeacoffee.com/metatronslove" target="_blank" style="display: inline-block; background: #FFDD00; color: #000000; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; transition: all 0.2s;">
-                    <span style="margin-right: 6px;">☕</span> Model Yaratıcısına Kahve Ismarla
-                </a>
-            `;
-
-            // GitHub repo linkini dinamik yap (isteğe bağlı)
-            document.getElementById('githubRepoLink').href = window.location.href;
-
-            // Başlat
+            // Start viewer
             window.onload = initViewer;
         })();
     </script>
