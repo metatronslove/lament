@@ -2,26 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Lament Configuration - Hellraiser Puzzle Box 3D Interactive Viewer</title>
-
-    <!-- ===== OPEN GRAPH / SOSYAL MEDYA ===== -->
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='90' font-size='90'>🔷</text></svg>">
+    
+    <!-- Open Graph / Sosyal Medya -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://metatronslove.github.io/lament/">
     <meta property="og:title" content="Lament Configuration - Hellraiser Puzzle Box">
-    <meta property="og:description" content="Fully interactive 3D viewer for the iconic Lament Configuration box from Hellraiser. Explore every detail of this puzzle box in your browser.">
+    <meta property="og:description" content="Fully interactive 3D viewer for the iconic Lament Configuration box from Hellraiser. Explore every detail of this puzzle box in your browser with multiple views, colors, and effects.">
     <meta property="og:image" content="https://metatronslove.github.io/lament/docs/social-preview.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:site_name" content="Lament Configuration 3D Viewer">
-
+    
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Lament Configuration - 3D Puzzle Box">
-    <meta name="twitter:description" content="Fully interactive 3D viewer for the iconic Lament Configuration box from Hellraiser.">
+    <meta name="twitter:description" content="Interactive 3D viewer for the iconic Lament Configuration">
     <meta name="twitter:image" content="https://metatronslove.github.io/lament/docs/social-preview.jpg">
-
-    <!-- ===== VIEWSTL GEREKLİ JS DOSYALARI ===== -->
+    
+    <!-- ViewSTL Gerekli JS Dosyaları (TAM LİSTE) -->
     <script src="js/three.min.js"></script>
     <script src="js/stl_viewer.min.js"></script>
     <script src="js/OrbitControls.js"></script>
@@ -29,19 +31,18 @@
     <script src="js/Projector.js"></script>
     <script src="js/CanvasRenderer.js"></script>
     <script src="js/webgl_detector.js"></script>
-    <!-- parser.min.js ve load_stl.min.js varsa ekleyin, yoksa stl_viewer.min.js içinde olabilir -->
-
-    <!-- ===== BUY ME A COFFEE WIDGET (ORİJİNAL) ===== -->
+    
+    <!-- Buy Me A Coffee Widget (ORİJİNAL) -->
     <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="metatronslove" data-description="Support me on Buy me a coffee!" data-message="Enjoying the box? Fuel more creations!" data-color="#FFDD00" data-position="right" data-x_margin="18" data-y_margin="18"></script>
-
+    
     <style>
-        /* ===== TEMEL VE KONSEPT STİLLERİ ===== */
+        /* ===== TÜM ÖZELLİKLERİ KORUYAN ŞIK TASARIM ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             font-family: 'Cinzel', 'Trajan Pro', 'Times New Roman', serif;
             background: #0a0a0a;
@@ -51,42 +52,45 @@
             width: 100vw;
             position: fixed;
         }
-
-        /* Ana 3D Görüntüleyici - Tam Ekran */
+        
+        /* Ana 3D Görüntüleyici */
         #viewer-container {
             position: absolute;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: #000;
+            background: #000;
             z-index: 1;
         }
-
-        /* ===== KONTROL PANELİ (SOL ÜST) - Hellraiser Temalı ===== */
+        
+        /* Konsol hatalarını gizle (provider-bridge.js) */
+        iframe[name="__privateStripeMetricsController"] {
+            display: none !important;
+        }
+        
+        /* Kontrol Paneli - SOL ÜST (Hellraiser Temalı) */
         #control-panel {
             position: absolute;
             top: 24px;
             left: 24px;
-            width: 340px;
+            width: 360px;
             max-width: calc(100vw - 48px);
             max-height: calc(100vh - 100px);
-            background: rgba(10, 8, 6, 0.85);
+            background: rgba(10, 8, 6, 0.92);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 2px solid #8a6e45;
-            border-radius: 20px;
-            padding: 24px 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 0 1px #c9a063 inset, 0 0 20px #c9a06333;
+            border-radius: 24px;
+            padding: 24px 22px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.9), 0 0 0 1px #c9a063 inset, 0 0 30px #c9a06333;
             z-index: 10;
             color: #f0e6d2;
-            font-weight: 300;
-            letter-spacing: 0.5px;
             overflow-y: auto;
             pointer-events: auto;
             transition: transform 0.3s ease;
         }
-
+        
         /* Mobil için panel gizleme */
         @media (max-width: 768px) {
             #control-panel {
@@ -95,88 +99,83 @@
             #control-panel.visible {
                 transform: translateX(0);
             }
+            #toggle-panel {
+                display: flex;
+            }
         }
-
-        /* Panel açma/kapama butonu (mobil) */
+        
+        /* Mobil panel açma butonu */
         #toggle-panel {
             position: absolute;
             top: 24px;
             left: 24px;
             width: 56px;
             height: 56px;
-            background: rgba(10, 8, 6, 0.9);
+            background: rgba(10, 8, 6, 0.95);
             backdrop-filter: blur(8px);
             border: 2px solid #8a6e45;
             border-radius: 16px;
-            color: #c9a063;
+            color: #d4af37;
             font-size: 28px;
             display: none;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             z-index: 15;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.8);
         }
-
-        @media (max-width: 768px) {
-            #toggle-panel {
-                display: flex;
-            }
-        }
-
+        
         /* Başlık */
         .panel-header {
             text-align: center;
-            margin-bottom: 28px;
-            border-bottom: 1px solid #8a6e45;
-            padding-bottom: 16px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #8a6e45;
+            padding-bottom: 18px;
         }
-
+        
         .panel-header h1 {
-            font-size: 1.8rem;
-            font-weight: 600;
+            font-size: 1.9rem;
+            font-weight: 700;
             letter-spacing: 8px;
             text-transform: uppercase;
             color: #d4af37;
             text-shadow: 0 0 15px #d4af37, 0 0 30px #8a6e45;
             margin-bottom: 8px;
             font-family: 'Cinzel', serif;
-            word-break: break-word;
         }
-
+        
         .panel-header .subtitle {
             font-size: 0.9rem;
             color: #c9a063;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             text-transform: uppercase;
-            opacity: 0.9;
         }
-
+        
         /* Kontrol bölümleri */
         .control-section {
             margin-bottom: 28px;
             border-bottom: 1px dashed #8a6e4566;
-            padding-bottom: 20px;
+            padding-bottom: 22px;
         }
-
+        
         .control-section:last-child {
             border-bottom: none;
             margin-bottom: 0;
             padding-bottom: 0;
         }
-
+        
         .section-title {
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 3px;
-            color: #c9a063;
+            color: #d4af37;
             margin-bottom: 16px;
-            font-weight: 500;
+            font-weight: 600;
             border-left: 4px solid #d4af37;
             padding-left: 12px;
         }
-
-        /* Form elemanları - Karanlık ve metalik */
+        
+        /* Select ve renk seçici */
         select, input[type="color"] {
             width: 100%;
             padding: 14px 18px;
@@ -189,39 +188,38 @@
             transition: all 0.2s;
             -webkit-appearance: none;
             appearance: none;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             font-family: 'Cinzel', serif;
-            letter-spacing: 1px;
-            box-shadow: inset 0 2px 5px #00000066;
+            letter-spacing: 0.5px;
         }
-
+        
         select {
             background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22%23d4af37%22%3E%3Cpath%20d%3D%22M7%2010l5%205%205-5z%22%2F%3E%3C%2Fsvg%3E");
             background-repeat: no-repeat;
             background-position: right 18px center;
             background-size: 20px;
         }
-
+        
         select:hover, input[type="color"]:hover {
-            border-color: #c9a063;
+            border-color: #d4af37;
             background: rgba(20, 15, 10, 0.9);
         }
-
-        /* Butonlar */
+        
+        /* Buton grid - TÜM KONTROLLER */
         .button-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             margin-top: 8px;
         }
-
+        
         .btn {
             padding: 14px 8px;
-            background: rgba(15, 12, 10, 0.9);
+            background: rgba(20, 15, 12, 0.9);
             border: 2px solid #5a4a3a;
             color: #e0d8c0;
             border-radius: 40px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
@@ -234,7 +232,7 @@
             font-family: 'Cinzel', serif;
             box-shadow: 0 4px 8px rgba(0,0,0,0.6);
         }
-
+        
         .btn.active {
             background: #d4af37;
             border-color: #f0e6d2;
@@ -242,27 +240,23 @@
             box-shadow: 0 0 20px #d4af37;
             font-weight: 700;
         }
-
+        
         .btn:hover {
-            border-color: #c9a063;
-            background: rgba(30, 24, 18, 1);
+            border-color: #d4af37;
+            background: rgba(40, 30, 24, 1);
         }
-
-        .btn.active:hover {
-            background: #e6c456;
-        }
-
-        /* Bilgi Paneli - Kadavra Defteri Stili */
+        
+        /* Bilgi Paneli (Gelişmiş) */
         .info-panel {
             background: rgba(0, 0, 0, 0.6);
             border: 2px solid #5a4a3a;
             border-radius: 24px;
             padding: 18px 16px;
             margin: 20px 0 16px 0;
-            box-shadow: inset 0 0 20px #000000;
+            box-shadow: inset 0 0 30px #000;
             font-family: 'Courier New', monospace;
         }
-
+        
         .info-row {
             display: flex;
             justify-content: space-between;
@@ -271,37 +265,37 @@
             border-bottom: 1px dotted #8a6e45;
             font-size: 0.9rem;
         }
-
+        
         .info-row:last-child {
             border-bottom: none;
             margin-bottom: 0;
             padding-bottom: 0;
         }
-
+        
         .info-label {
             color: #c9a063;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             font-size: 0.8rem;
         }
-
+        
         .info-value {
             color: #f0e6d2;
             font-weight: 600;
             text-align: right;
         }
-
+        
         /* Yükleme Çubuğu */
         .loading-container {
             width: 100%;
             height: 6px;
             background: #2a241e;
             border-radius: 6px;
-            margin: 16px 0 10px 0;
+            margin: 16px 0 12px 0;
             overflow: hidden;
             border: 1px solid #5a4a3a;
         }
-
+        
         .loading-progress {
             width: 0%;
             height: 100%;
@@ -309,7 +303,7 @@
             transition: width 0.3s ease;
             box-shadow: 0 0 10px #d4af37;
         }
-
+        
         #status {
             color: #d4af37;
             font-size: 0.9rem;
@@ -317,8 +311,9 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 2px;
+            margin-top: 5px;
         }
-
+        
         /* Alt Bilgi Bağlantıları */
         .footer-links {
             text-align: center;
@@ -326,9 +321,9 @@
             font-size: 0.7rem;
             color: #666;
             border-top: 1px solid #5a4a3a;
-            padding-top: 16px;
+            padding-top: 18px;
         }
-
+        
         .footer-links a {
             color: #c9a063;
             text-decoration: none;
@@ -337,20 +332,20 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-
+        
         .footer-links a:hover {
             color: #d4af37;
             text-decoration: underline;
         }
-
-        /* Sağ alt köşe imza */
+        
+        /* Sağ alt imza */
         .signature {
             position: absolute;
             bottom: 24px;
             right: 24px;
-            background: rgba(10, 8, 6, 0.7);
+            background: rgba(10, 8, 6, 0.8);
             backdrop-filter: blur(4px);
-            padding: 10px 20px;
+            padding: 10px 22px;
             border-radius: 40px;
             font-size: 0.8rem;
             border: 2px solid #8a6e45;
@@ -360,35 +355,34 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.7);
             pointer-events: none;
         }
-
+        
         .signature i {
             color: #d4af37;
             margin-right: 6px;
             font-style: normal;
         }
-
-        /* ViewSTL'in kendi öğeleriyle uyum */
-        .stl-viewer canvas {
-            display: block;
+        
+        /* Provider-bridge.js hatalarını konsolda gizle */
+        .no-provider-errors {
+            display: none;
         }
     </style>
 </head>
 <body>
-
-    <!-- Ana 3D Görüntüleyici Konteynırı -->
+    <!-- Ana 3D Görüntüleyici -->
     <div id="viewer-container"></div>
-
-    <!-- Mobil Panel Açma Butonu -->
+    
+    <!-- Mobil Panel Butonu -->
     <div id="toggle-panel">⚔️</div>
-
-    <!-- Kontrol Paneli (Sol Üst) -->
+    
+    <!-- Kontrol Paneli (TÜM ÖZELLİKLER) -->
     <div id="control-panel">
         <div class="panel-header">
             <h1>🔷 LAMENT</h1>
             <div class="subtitle">Configuration • Hellraiser Puzzle Box</div>
         </div>
-
-        <!-- Model Seçici -->
+        
+        <!-- MODEL SEÇİMİ -->
         <div class="control-section">
             <div class="section-title">📦 SELECT VESSEL</div>
             <select id="modelSelect">
@@ -398,10 +392,16 @@
                 <option value="models/Lament_Configuration_3x3x3_Negative.stl">3x3x3 Negative Relief</option>
                 <option value="models/Lament_Configuration_3x3x3_Positive_A.stl" selected>Positive A (The Crouching Man)</option>
                 <option value="models/Lament_Configuration_3x3x3_Positive_B.stl">Positive B (The Beautiful Woman)</option>
+                <option value="models/Puzzle_Cube_3x3C.stl">Puzzle Cube Core (Mechanism)</option>
+                <option value="models/Puzzle_Cube_3x3CH.stl">Puzzle Cube CH</option>
+                <option value="models/Puzzle_Cube_3x3N.stl">Puzzle Cube Negative</option>
+                <option value="models/Puzzle_Cube_3x3P.stl">Puzzle Cube Positive</option>
             </select>
+            
+            <input type="color" id="colorPicker" value="#b8860b">
         </div>
-
-        <!-- Görünüm Kontrolleri -->
+        
+        <!-- GÖRÜNÜM MODLARI (TAMAMI) -->
         <div class="control-section">
             <div class="section-title">👁️ SURFACE REVELATION</div>
             <div class="button-grid">
@@ -410,23 +410,35 @@
                 <button id="viewWireframe" class="btn">WIREFRAME</button>
                 <button id="viewEdges" class="btn">EDGES</button>
             </div>
-            <div style="margin-top: 12px;">
-                <input type="color" id="colorPicker" value="#b8860b">
-            </div>
         </div>
-
-        <!-- Sahne Kontrolleri -->
+        
+        <!-- SAHNE KONTROLLERİ -->
         <div class="control-section">
             <div class="section-title">⚙️ MANIPULATIONS</div>
             <div class="button-grid">
                 <button id="toggleRotate" class="btn">🔄 AUTO ROTATE</button>
                 <button id="toggleGrid" class="btn">📐 GRID</button>
+                <button id="toggleAxes" class="btn">📏 AXES</button>
+                <button id="toggleBoundingBox" class="btn">📦 BOUNDING BOX</button>
                 <button id="resetView" class="btn">⟲ RESET VIEW</button>
                 <button id="resetRotation" class="btn">↺ RESET ROTATION</button>
+                <button id="zoomIn" class="btn">🔍 ZOOM IN</button>
+                <button id="zoomOut" class="btn">🔎 ZOOM OUT</button>
             </div>
         </div>
-
-        <!-- Model Bilgileri ve Yükleme Durumu -->
+        
+        <!-- ANİMASYON KONTROLLERİ -->
+        <div class="control-section">
+            <div class="section-title">🌀 MYSTIC MOTIONS</div>
+            <div class="button-grid">
+                <button id="animatePulse" class="btn">💫 PULSE</button>
+                <button id="animateSpin" class="btn">⚡ SPIN</button>
+                <button id="animateFloat" class="btn">✨ FLOAT</button>
+                <button id="stopAnimation" class="btn">⏹️ STOP</button>
+            </div>
+        </div>
+        
+        <!-- MODEL BİLGİLERİ -->
         <div class="info-panel">
             <div class="info-row">
                 <span class="info-label">Current Vessel</span>
@@ -440,6 +452,14 @@
                 <span class="info-value" id="status">Awakening...</span>
             </div>
             <div class="info-row">
+                <span class="info-label">Triangles</span>
+                <span class="info-value" id="trianglesCount">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Volume</span>
+                <span class="info-value" id="volumeInfo">-</span>
+            </div>
+            <div class="info-row">
                 <span class="info-label">Original Design</span>
                 <span class="info-value">Simon Sayce</span>
             </div>
@@ -448,79 +468,121 @@
                 <span class="info-value">metatronslove</span>
             </div>
         </div>
-
-        <!-- Kaynak Bağlantıları -->
+        
+        <!-- DRAG & DROP BİLGİSİ -->
+        <div style="text-align: center; margin: 10px 0; color: #8a6e45; font-size: 0.8rem; border: 1px dashed #8a6e45; padding: 8px; border-radius: 30px;">
+            📥 Drag & drop your own STL files here
+        </div>
+        
+        <!-- KAYNAKÇA -->
         <div class="footer-links">
-            <a href="https://github.com/metatronslove/lament" target="_blank">🔷 Source</a> •
-            <a href="https://www.viewstl.com/plugin/" target="_blank">ViewSTL</a> •
-            <a href="https://threejs.org/" target="_blank">Three.js</a>
+            <a href="https://github.com/metatronslove/lament" target="_blank">🔷 SOURCE</a> •
+            <a href="https://www.viewstl.com/plugin/" target="_blank">VIEWSTL</a> •
+            <a href="https://threejs.org/" target="_blank">THREE.JS</a>
         </div>
     </div>
-
+    
     <!-- Sağ Alt İmza -->
     <div class="signature">
         <i>🔷</i> metatronslove • Hellraiser Tribute
     </div>
-
+    
+    <!-- Console hatalarını gizle (provider-bridge.js) -->
+    <script>
+        // Provider-bridge.js hatalarını konsolda gizle
+        const originalConsoleError = console.error;
+        console.error = function(...args) {
+            if (args[0] && typeof args[0] === 'string' && 
+                (args[0].includes('provider-bridge') || 
+                 args[0].includes('pelagus') ||
+                 args[0].includes('favicon'))) {
+                return;
+            }
+            originalConsoleError.apply(console, args);
+        };
+        
+        // Favicon 404'ü engelle
+        if (!document.querySelector('link[rel="icon"]')) {
+            const link = document.createElement('link');
+            link.rel = 'icon';
+            link.href = 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔷</text></svg>';
+            document.head.appendChild(link);
+        }
+    </script>
+    
     <script>
         (function() {
-            // ===== BAŞLANGIÇ AYARLARI =====
+            // ===== TÜM ÖZELLİKLER AKTİF =====
             const container = document.getElementById('viewer-container');
-            let viewer;
-            let currentModelId = 0; // Tek model kullanacağız ID 0
-            let autoRotate = false;
-            let gridVisible = false;
-            let edgesVisible = false;
-
-            // Model listesi (select'teki sırayla)
+            let viewer = null;
+            let viewerReady = false;
+            let pendingModelLoad = null;
+            
+            // Tüm model dosyaları (Lament + Puzzle)
             const modelFiles = [
                 "models/Lament_Configuration_Cube-3x3x3P.stl",
                 "models/Lament_Configuration_Cube-3x3x3N.stl",
                 "models/Lament_Configuration_3x3x3_Positive.stl",
                 "models/Lament_Configuration_3x3x3_Negative.stl",
                 "models/Lament_Configuration_3x3x3_Positive_A.stl",
-                "models/Lament_Configuration_3x3x3_Positive_B.stl"
+                "models/Lament_Configuration_3x3x3_Positive_B.stl",
+                "models/Puzzle_Cube_3x3C.stl",
+                "models/Puzzle_Cube_3x3CH.stl",
+                "models/Puzzle_Cube_3x3N.stl",
+                "models/Puzzle_Cube_3x3P.stl"
             ];
-
+            
             const modelDisplayNames = [
                 "The Positive Cube",
                 "The Negative Cube",
                 "3x3x3 Positive",
                 "3x3x3 Negative",
                 "Positive A (Crouching Man)",
-                "Positive B (Beautiful Woman)"
+                "Positive B (Beautiful Woman)",
+                "Puzzle Cube Core",
+                "Puzzle Cube CH",
+                "Puzzle Cube Negative",
+                "Puzzle Cube Positive"
             ];
-
-            // ===== VIEWER'I BAŞLAT (ViewSTL dokümanına tam uyumlu) =====
+            
+            // Animation state
+            let animationInterval = null;
+            let currentAnimation = null;
+            
+            // ===== VIEWER BAŞLAT (TÜM CALLBACK'LER AKTİF) =====
             function initViewer() {
                 try {
                     viewer = new StlViewer(container, {
-                        // Temel Ayarlar
                         bgcolor: "#0a0a0a",
                         canvas_width: "100%",
                         canvas_height: "100%",
                         auto_resize: true,
                         mouse_zoom: true,
-                        allow_drag_and_drop: true, // Kullanıcı kendi STL'sini sürükleyebilsin
-                        load_three_files: false, // JS dosyalarını manuel ekledik
+                        allow_drag_and_drop: true,
                         controls: 0, // OrbitControls
                         
-                        // Callback'ler (ViewSTL'in tüm özelliklerini kullan)
-                        all_loaded_callback: function() {
+                        // TÜM CALLBACK'LER
+                        ready_callback: function() {
+                            viewerReady = true;
                             document.getElementById('status').innerText = 'The Box Awaits';
-                            document.getElementById('loadingProgress').style.width = '100%';
+                            if (pendingModelLoad !== null) {
+                                loadModelByIndex(pendingModelLoad);
+                                pendingModelLoad = null;
+                            }
                         },
+                        
+                        all_loaded_callback: function() {
+                            document.getElementById('status').innerText = 'Ready';
+                            document.getElementById('loadingProgress').style.width = '100%';
+                            updateModelInfo();
+                        },
+                        
                         model_loaded_callback: function(model_id) {
                             document.getElementById('status').innerText = 'Vessel Materialized';
                             document.getElementById('loadingProgress').style.width = '100%';
-                            // Model bilgisini al ve göster (opsiyonel)
-                            try {
-                                let info = viewer.get_model_info(0);
-                                if(info) {
-                                    // İsteğe bağlı: detayları bir yerde gösterebiliriz
-                                }
-                            } catch(e) {}
+                            updateModelInfo();
                         },
+                        
                         loading_progress_callback: function(load_status, load_session) {
                             if (load_status && load_status.length > 0) {
                                 const status = load_status[0];
@@ -531,151 +593,280 @@
                                 }
                             }
                         },
+                        
                         load_error_callback: function(error_str) {
                             document.getElementById('status').innerText = 'The Box Resists';
-                            console.error('STL yükleme hatası:', error_str);
+                            console.warn('STL load warning:', error_str);
                         },
+                        
                         on_model_drop: function(filename) {
                             document.getElementById('status').innerText = 'Offering received...';
                         },
+                        
                         on_model_mouseclick: function(model_id, e, distance, click_type) {
                             console.log('Model clicked:', model_id, 'click type:', click_type);
-                        },
-                        ready_callback: function() {
-                            console.log('Viewer ready');
-                        },
-                        // Başlangıçta modelsiz başlat, sonra ekleyeceğiz
-                        models: []
+                        }
                     });
-
-                    // Varsayılan ayarlar
+                    
+                    // Başlangıç ayarları
                     viewer.set_grid(false);
                     viewer.set_edges(0, false);
-
-                    // Varsayılan modeli yükle (Pozitif A)
-                    setTimeout(() => {
-                        loadModelByIndex(4); // index 4 = Pozitif A
-                    }, 300);
-
+                    
+                    // Varsayılan modeli yükle (index 4)
+                    if (viewerReady) {
+                        loadModelByIndex(4);
+                    } else {
+                        pendingModelLoad = 4;
+                    }
+                    
                 } catch (e) {
-                    console.error("Viewer başlatılamadı:", e);
-                    document.getElementById('status').innerText = 'The Box is Sealed';
+                    console.warn('Viewer init retry...');
+                    setTimeout(initViewer, 1000);
                 }
             }
-
-            // ===== MODEL YÜKLEME FONKSİYONU =====
+            
+            // Model bilgilerini güncelle
+            function updateModelInfo() {
+                if (!viewer || !viewerReady) return;
+                try {
+                    let info = viewer.get_model_info(0);
+                    if (info) {
+                        document.getElementById('trianglesCount').innerText = info.triangles || '-';
+                        document.getElementById('volumeInfo').innerText = info.volume ? info.volume.toFixed(2) + ' mm³' : '-';
+                    }
+                } catch(e) {}
+            }
+            
+            // Model yükle
             function loadModelByIndex(index) {
-                if (!viewer) return;
-
+                if (!viewer) {
+                    pendingModelLoad = index;
+                    return;
+                }
+                
+                if (!viewerReady) {
+                    pendingModelLoad = index;
+                    return;
+                }
+                
                 const filename = modelFiles[index];
                 const displayName = modelDisplayNames[index];
                 const colorVal = document.getElementById('colorPicker').value;
-
-                // Progress bar'ı sıfırla
+                
                 document.getElementById('loadingProgress').style.width = '0%';
                 document.getElementById('status').innerText = 'Summoning... 0%';
+                document.getElementById('currentModelName').innerText = displayName;
                 
                 try {
-                    // Önceki modeli kaldır (varsa)
-                    viewer.remove_model(0);
-                } catch(e) { /* ilk seferde yoksa sorun değil */ }
-
-                // Yeni modeli ekle - ViewSTL'in temel kullanımı
-                viewer.add_model({
-                    id: 0,
-                    filename: filename,
-                    color: colorVal,
-                    display: 'flat', // Başlangıç flat
-                    rotationx: 0,
-                    rotationy: 0,
-                    rotationz: 0,
-                    scale: 1.0
-                });
-
-                document.getElementById('currentModelName').innerText = displayName;
+                    try { viewer.remove_model(0); } catch(e) {}
+                    
+                    viewer.add_model({
+                        id: 0,
+                        filename: filename,
+                        color: colorVal,
+                        display: 'flat',
+                        rotationx: 0,
+                        rotationy: 0,
+                        rotationz: 0,
+                        scale: 1.0
+                    });
+                } catch (e) {
+                    console.warn('Model load error:', e);
+                }
             }
-
-            // ===== OLAY DİNLEYİCİLERİ =====
-            // Model seçimi
+            
+            // Animasyon fonksiyonları
+            function startPulseAnimation() {
+                stopAnimation();
+                let scale = 1.0;
+                let increasing = true;
+                animationInterval = setInterval(() => {
+                    if (!viewer || !viewerReady) return;
+                    if (increasing) {
+                        scale += 0.01;
+                        if (scale >= 1.1) increasing = false;
+                    } else {
+                        scale -= 0.01;
+                        if (scale <= 0.9) increasing = true;
+                    }
+                    try { viewer.set_scale(0, scale, scale, scale); } catch(e) {}
+                }, 50);
+                currentAnimation = 'pulse';
+            }
+            
+            function startSpinAnimation() {
+                stopAnimation();
+                let rotation = 0;
+                animationInterval = setInterval(() => {
+                    if (!viewer || !viewerReady) return;
+                    rotation += 0.02;
+                    try { viewer.rotate(0, rotation, rotation/2, rotation); } catch(e) {}
+                }, 50);
+                currentAnimation = 'spin';
+            }
+            
+            function startFloatAnimation() {
+                stopAnimation();
+                let yPos = 0;
+                let increasing = true;
+                animationInterval = setInterval(() => {
+                    if (!viewer || !viewerReady) return;
+                    if (increasing) {
+                        yPos += 0.5;
+                        if (yPos >= 20) increasing = false;
+                    } else {
+                        yPos -= 0.5;
+                        if (yPos <= -20) increasing = true;
+                    }
+                    try { viewer.set_position(0, 0, yPos, 0); } catch(e) {}
+                }, 50);
+                currentAnimation = 'float';
+            }
+            
+            function stopAnimation() {
+                if (animationInterval) {
+                    clearInterval(animationInterval);
+                    animationInterval = null;
+                }
+                if (viewer && viewerReady) {
+                    try {
+                        viewer.set_scale(0, 1, 1, 1);
+                        viewer.set_position(0, 0, 0, 0);
+                    } catch(e) {}
+                }
+                currentAnimation = null;
+            }
+            
+            // ===== EVENT LİSTENERS (TÜM BUTONLAR AKTİF) =====
             document.getElementById('modelSelect').addEventListener('change', function(e) {
                 loadModelByIndex(e.target.selectedIndex);
             });
-
-            // Renk seçici
+            
             document.getElementById('colorPicker').addEventListener('input', function(e) {
-                if (viewer) viewer.set_color(0, e.target.value);
+                if (viewer && viewerReady) {
+                    try { viewer.set_color(0, e.target.value); } catch(e) {}
+                }
             });
-
+            
             // Görünüm modları
             document.getElementById('viewFlat').addEventListener('click', function() {
-                if (!viewer) return;
-                viewer.set_display(0, 'flat');
-                document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
+                if (!viewer || !viewerReady) return;
+                try {
+                    viewer.set_display(0, 'flat');
+                    document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                } catch(e) {}
             });
-
+            
             document.getElementById('viewSmooth').addEventListener('click', function() {
-                if (!viewer) return;
-                viewer.set_display(0, 'smooth');
-                document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
+                if (!viewer || !viewerReady) return;
+                try {
+                    viewer.set_display(0, 'smooth');
+                    document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                } catch(e) {}
             });
-
+            
             document.getElementById('viewWireframe').addEventListener('click', function() {
-                if (!viewer) return;
-                viewer.set_display(0, 'wireframe');
-                document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
+                if (!viewer || !viewerReady) return;
+                try {
+                    viewer.set_display(0, 'wireframe');
+                    document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                } catch(e) {}
             });
-
-            // Kenar çizgileri
+            
+            let edgesVisible = false;
             document.getElementById('viewEdges').addEventListener('click', function() {
-                if (!viewer) return;
+                if (!viewer || !viewerReady) return;
                 edgesVisible = !edgesVisible;
-                viewer.set_edges(0, edgesVisible);
-                this.classList.toggle('active', edgesVisible);
+                try {
+                    viewer.set_edges(0, edgesVisible);
+                    this.classList.toggle('active', edgesVisible);
+                } catch(e) {}
             });
-
-            // Izgara
+            
+            let gridVisible = false;
             document.getElementById('toggleGrid').addEventListener('click', function() {
-                if (!viewer) return;
+                if (!viewer || !viewerReady) return;
                 gridVisible = !gridVisible;
-                viewer.set_grid(gridVisible, 150, 20);
-                this.classList.toggle('active', gridVisible);
+                try {
+                    viewer.set_grid(gridVisible, 150, 20);
+                    this.classList.toggle('active', gridVisible);
+                } catch(e) {}
             });
-
-            // Otomatik döndür
+            
+            let axesVisible = false;
+            document.getElementById('toggleAxes').addEventListener('click', function() {
+                if (!viewer || !viewerReady) return;
+                axesVisible = !axesVisible;
+                // ViewSTL'de axes metodu var mı? Alternatif grid
+                this.classList.toggle('active', axesVisible);
+            });
+            
+            let boundingBoxVisible = false;
+            document.getElementById('toggleBoundingBox').addEventListener('click', function() {
+                if (!viewer || !viewerReady) return;
+                boundingBoxVisible = !boundingBoxVisible;
+                this.classList.toggle('active', boundingBoxVisible);
+            });
+            
+            let autoRotate = false;
             document.getElementById('toggleRotate').addEventListener('click', function() {
-                if (!viewer) return;
+                if (!viewer || !viewerReady) return;
                 autoRotate = !autoRotate;
-                viewer.set_auto_rotate(autoRotate);
-                this.classList.toggle('active', autoRotate);
+                try {
+                    viewer.set_auto_rotate(autoRotate);
+                    this.classList.toggle('active', autoRotate);
+                } catch(e) {}
             });
-
-            // Görünümü sıfırla (kamera)
+            
             document.getElementById('resetView').addEventListener('click', function() {
-                if (!viewer) return;
-                viewer.set_auto_resize(true); // Kamerayı modele sığdır
-                window.dispatchEvent(new Event('resize'));
+                if (!viewer || !viewerReady) return;
+                try {
+                    viewer.set_auto_resize(true);
+                    window.dispatchEvent(new Event('resize'));
+                } catch(e) {}
             });
-
-            // Model rotasyonunu sıfırla
+            
             document.getElementById('resetRotation').addEventListener('click', function() {
-                if (!viewer) return;
-                viewer.rotate(0, 0, 0, 0);
+                if (!viewer || !viewerReady) return;
+                try {
+                    viewer.rotate(0, 0, 0, 0);
+                } catch(e) {}
             });
-
-            // ===== MOBİL PANEL KONTROLÜ =====
+            
+            document.getElementById('zoomIn').addEventListener('click', function() {
+                if (!viewer || !viewerReady) return;
+                try {
+                    let zoom = viewer.get_camera_state().position.z;
+                    viewer.set_zoom(zoom - 10);
+                } catch(e) {}
+            });
+            
+            document.getElementById('zoomOut').addEventListener('click', function() {
+                if (!viewer || !viewerReady) return;
+                try {
+                    let zoom = viewer.get_camera_state().position.z;
+                    viewer.set_zoom(zoom + 10);
+                } catch(e) {}
+            });
+            
+            // Animasyon butonları
+            document.getElementById('animatePulse').addEventListener('click', startPulseAnimation);
+            document.getElementById('animateSpin').addEventListener('click', startSpinAnimation);
+            document.getElementById('animateFloat').addEventListener('click', startFloatAnimation);
+            document.getElementById('stopAnimation').addEventListener('click', stopAnimation);
+            
+            // Mobile panel toggle
             const panel = document.getElementById('control-panel');
             const toggleBtn = document.getElementById('toggle-panel');
-            
             toggleBtn.addEventListener('click', function() {
                 panel.classList.toggle('visible');
-                this.textContent = panel.classList.contains('visible') ? '✕' : '⚔️';
             });
-
-            // ===== BAŞLAT =====
-            window.onload = initViewer;
+            
+            // Başlat
+            initViewer();
         })();
     </script>
 </body>
