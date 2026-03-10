@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lament Configuration - 3D Viewer</title>
+    <title>Lament Configuration - Hellraiser Puzzle Box</title>
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='90' font-size='90'>🔷</text></svg>">
     
     <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://metatronslove.github.io/lament/">
-    <meta property="og:title" content="Lament Configuration - Hellraiser Puzzle Box">
-    <meta property="og:description" content="Interactive 3D viewer for the Lament Configuration box from Hellraiser">
+    <meta property="og:title" content="Lament Configuration - 3D Viewer">
+    <meta property="og:description" content="Interactive 3D viewer for the Lament Configuration box">
     <meta property="og:image" content="https://metatronslove.github.io/lament/docs/social-preview.jpg">
     
-    <!-- ViewSTL için TÜM GEREKLİ DOSYALAR (doğru sırayla) -->
+    <!-- Three.js ve ViewSTL -->
     <script src="js/three.min.js"></script>
     <script src="js/webgl_detector.js"></script>
     <script src="js/Projector.js"></script>
@@ -23,7 +22,6 @@
     <script src="js/OrbitControls.js"></script>
     <script src="js/TrackballControls.js"></script>
     <script src="js/stl_viewer.min.js"></script>
-    <!-- NOT: load_stl.min.js Worker olduğu için script olarak eklenmez! -->
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -46,7 +44,7 @@
             z-index: 1;
         }
         
-        /* Basit kontrol paneli */
+        /* Kontrol paneli */
         #controls {
             position: absolute;
             top: 20px;
@@ -164,6 +162,7 @@
         (function() {
             const container = document.getElementById('viewer-container');
             let viewer = null;
+            let currentModelId = 0;
             
             const modelFiles = [
                 "models/Lament_Configuration_Cube-3x3x3P.stl",
@@ -174,9 +173,13 @@
                 "models/Lament_Configuration_3x3x3_Positive_B.stl"
             ];
             
+            // Worker'ın load_stl.min.js'i bulması için path'i ayarla
+            // stl_viewer.min.js içindeki stl_viewer_script_path değişkenini set et
+            window.stl_viewer_script_path = "js/";
+            
             function initViewer() {
                 try {
-                    console.log('Initializing viewer...');
+                    console.log('Initializing viewer with path:', window.stl_viewer_script_path);
                     
                     viewer = new StlViewer(container, {
                         bgcolor: "#0a0a0a",
@@ -186,7 +189,7 @@
                         
                         all_loaded_callback: function() {
                             document.getElementById('status').innerText = 'Ready';
-                            console.log('Model loaded');
+                            console.log('Model loaded successfully');
                         },
                         
                         load_error_callback: function(err) {
@@ -197,7 +200,7 @@
                     
                     // Varsayılan model
                     setTimeout(() => {
-                        loadModel(4);
+                        loadModel(4); // Positive A
                     }, 500);
                     
                 } catch (e) {
@@ -207,20 +210,29 @@
             }
             
             function loadModel(index) {
-                if (!viewer) return;
+                if (!viewer) {
+                    console.log('Viewer not ready');
+                    return;
+                }
                 
                 const filename = modelFiles[index];
                 const displayName = document.querySelectorAll('#modelSelect option')[index].text;
                 
+                console.log('Loading model:', filename);
+                
                 document.getElementById('currentModel').innerText = displayName;
                 document.getElementById('status').innerText = 'Loading...';
                 
+                // Önceki modeli kaldır (hata vermesin)
                 try {
-                    viewer.remove_model(0);
-                } catch(e) {}
+                    viewer.remove_model(currentModelId);
+                } catch(e) {
+                    console.log('Remove model warning:', e.message);
+                }
                 
+                // Yeni modeli ekle
                 viewer.add_model({
-                    id: 0,
+                    id: currentModelId,
                     filename: filename,
                     color: document.getElementById('colorPicker').value,
                     display: 'flat'
@@ -234,27 +246,35 @@
             
             document.getElementById('colorPicker').addEventListener('input', function(e) {
                 if (viewer) {
-                    try { viewer.set_color(0, e.target.value); } catch(e) {}
+                    try { 
+                        viewer.set_color(currentModelId, e.target.value); 
+                    } catch(e) {}
                 }
             });
             
             document.getElementById('viewFlat').addEventListener('click', function() {
                 if (!viewer) return;
-                try { viewer.set_display(0, 'flat'); } catch(e) {}
+                try { 
+                    viewer.set_display(currentModelId, 'flat'); 
+                } catch(e) {}
                 document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
             });
             
             document.getElementById('viewSmooth').addEventListener('click', function() {
                 if (!viewer) return;
-                try { viewer.set_display(0, 'smooth'); } catch(e) {}
+                try { 
+                    viewer.set_display(currentModelId, 'smooth'); 
+                } catch(e) {}
                 document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
             });
             
             document.getElementById('viewWireframe').addEventListener('click', function() {
                 if (!viewer) return;
-                try { viewer.set_display(0, 'wireframe'); } catch(e) {}
+                try { 
+                    viewer.set_display(currentModelId, 'wireframe'); 
+                } catch(e) {}
                 document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
             });
@@ -263,7 +283,9 @@
             document.getElementById('toggleRotate').addEventListener('click', function() {
                 if (!viewer) return;
                 rotate = !rotate;
-                try { viewer.set_auto_rotate(rotate); } catch(e) {}
+                try { 
+                    viewer.set_auto_rotate(rotate); 
+                } catch(e) {}
                 this.classList.toggle('active', rotate);
             });
             
@@ -271,13 +293,17 @@
             document.getElementById('toggleGrid').addEventListener('click', function() {
                 if (!viewer) return;
                 grid = !grid;
-                try { viewer.set_grid(grid, 100, 10); } catch(e) {}
+                try { 
+                    viewer.set_grid(grid, 100, 10); 
+                } catch(e) {}
                 this.classList.toggle('active', grid);
             });
             
             document.getElementById('resetView').addEventListener('click', function() {
                 if (!viewer) return;
-                try { viewer.set_auto_resize(true); } catch(e) {}
+                try { 
+                    viewer.set_auto_resize(true); 
+                } catch(e) {}
             });
             
             // Başlat
