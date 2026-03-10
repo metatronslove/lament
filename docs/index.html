@@ -11,8 +11,10 @@
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="Lament Configuration - 3D Viewer">
-    <meta property="og:description" content="Interactive 3D viewer for the Lament Configuration box">
+    <meta property="og:description" content="Interactive 3D viewer for the Lament Configuration box from Hellraiser">
     <meta property="og:image" content="https://metatronslove.github.io/lament/social-preview.jpg">
+    <meta property="og:url" content="https://metatronslove.github.io/lament/">
+    <meta name="twitter:card" content="summary_large_image">
     
     <!-- Three.js ve ViewSTL -->
     <script src="https://metatronslove.github.io/lament/js/three.min.js"></script>
@@ -27,7 +29,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Cinzel', 'Arial', serif;
             background: #0a0a0a;
             overflow: hidden;
             height: 100vh;
@@ -44,57 +46,227 @@
             z-index: 1;
         }
         
-        /* Kontrol paneli */
+        /* Kontrol paneli - gelişmiş */
         #controls {
             position: absolute;
             top: 20px;
             left: 20px;
-            background: rgba(20, 20, 20, 0.9);
-            border: 2px solid #b8860b;
-            border-radius: 12px;
-            padding: 15px;
-            color: white;
+            background: rgba(10, 8, 6, 0.92);
+            backdrop-filter: blur(10px);
+            border: 2px solid #8a6e45;
+            border-radius: 16px;
+            padding: 18px;
+            color: #f0e6d2;
             z-index: 10;
-            width: 260px;
-            backdrop-filter: blur(5px);
+            width: 300px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+        
+        #controls::-webkit-scrollbar {
+            width: 4px;
+        }
+        #controls::-webkit-scrollbar-track {
+            background: #2a241e;
+        }
+        #controls::-webkit-scrollbar-thumb {
+            background: #8a6e45;
+            border-radius: 4px;
+        }
+        
+        @media (max-width: 768px) {
+            #controls {
+                transform: translateX(-120%);
+                transition: transform 0.3s ease;
+            }
+            #controls.visible {
+                transform: translateX(0);
+            }
+            #toggle-panel {
+                display: flex;
+            }
+        }
+        
+        #toggle-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(10,8,6,0.9);
+            border: 2px solid #8a6e45;
+            border-radius: 12px;
+            color: #d4af37;
+            font-size: 24px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 15;
+        }
+        
+        .panel-header {
+            text-align: center;
+            border-bottom: 1px solid #8a6e45;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .panel-header h1 {
+            font-size: 1.5rem;
+            letter-spacing: 5px;
+            color: #d4af37;
+            text-shadow: 0 0 10px #d4af37;
+        }
+        
+        .panel-header .subtitle {
+            color: #c9a063;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+        }
+        
+        .control-section {
+            margin-bottom: 20px;
+            border-bottom: 1px dashed #8a6e4566;
+            padding-bottom: 15px;
+        }
+        
+        .section-title {
+            color: #d4af37;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            border-left: 3px solid #d4af37;
+            padding-left: 10px;
+            text-transform: uppercase;
         }
         
         select, input[type="color"] {
             width: 100%;
-            padding: 8px;
-            margin: 5px 0;
-            background: #333;
-            border: 1px solid #b8860b;
-            color: white;
-            border-radius: 5px;
+            padding: 10px 12px;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid #5a4a3a;
+            border-radius: 30px;
+            color: #f0e6d2;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
         }
         
-        .btn-group {
+        .button-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 5px;
+            gap: 8px;
+            margin-top: 5px;
+        }
+        
+        .btn {
+            padding: 10px 5px;
+            background: rgba(20,15,12,0.9);
+            border: 1px solid #5a4a3a;
+            border-radius: 30px;
+            color: #e0d8c0;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn.active {
+            background: #d4af37;
+            border-color: #f0e6d2;
+            color: #0a0a0a;
+            box-shadow: 0 0 10px #d4af37;
+        }
+        
+        .btn:hover {
+            border-color: #d4af37;
+            background: rgba(40,30,24,1);
+        }
+        
+        .info-panel {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid #5a4a3a;
+            border-radius: 16px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 0.85rem;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px dotted #8a6e45;
+        }
+        
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            color: #c9a063;
+        }
+        
+        .info-value {
+            color: #f0e6d2;
+            font-weight: 600;
+        }
+        
+        .loading-container {
+            width: 100%;
+            height: 4px;
+            background: #2a241e;
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .loading-progress {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #8a6e45, #d4af37);
+            transition: width 0.3s ease;
+        }
+        
+        #status {
+            color: #d4af37;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 5px 0;
+        }
+        
+        .drag-drop {
+            text-align: center;
+            color: #8a6e45;
+            font-size: 0.7rem;
+            border: 1px dashed #8a6e45;
+            padding: 8px;
+            border-radius: 30px;
             margin: 10px 0;
         }
         
-        button {
-            padding: 8px;
-            background: #333;
-            border: 1px solid #b8860b;
-            color: #b8860b;
-            border-radius: 5px;
-            cursor: pointer;
+        .footer-links {
+            text-align: center;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #5a4a3a;
+            font-size: 0.7rem;
         }
         
-        button.active {
-            background: #b8860b;
-            color: black;
+        .footer-links a {
+            color: #c9a063;
+            text-decoration: none;
+            margin: 0 8px;
         }
         
-        .info {
-            margin-top: 10px;
-            padding: 8px;
-            background: #222;
-            border-radius: 5px;
+        .footer-links a:hover {
+            color: #d4af37;
+            text-decoration: underline;
         }
         
         #bmc-container {
@@ -114,41 +286,118 @@
             padding: 5px 15px;
             border-radius: 20px;
             z-index: 5;
+            border: 1px solid #333;
         }
     </style>
 </head>
 <body>
     <div id="viewer-container"></div>
     
+    <div id="toggle-panel">🔷</div>
+    
     <div id="controls">
-        <h3 style="color: #b8860b; text-align: center;">🔷 LAMENT</h3>
-        
-        <select id="modelSelect">
-            <option value="https://metatronslove.github.io/lament/models/Lament_Configuration_Cube-3x3x3P.stl">Cube 3x3x3P</option>
-            <option value="https://metatronslove.github.io/lament/models/Lament_Configuration_Cube-3x3x3N.stl">Cube 3x3x3N</option>
-            <option value="https://metatronslove.github.io/lament/models/Lament_Configuration_3x3x3_Positive.stl">3x3x3 Positive</option>
-            <option value="https://metatronslove.github.io/lament/models/Lament_Configuration_3x3x3_Negative.stl">3x3x3 Negative</option>
-            <option value="https://metatronslove.github.io/lament/models/Lament_Configuration_3x3x3_Positive_A.stl" selected>Positive A</option>
-            <option value="https://metatronslove.github.io/lament/models/Lament_Configuration_3x3x3_Positive_B.stl">Positive B</option>
-        </select>
-        
-        <input type="color" id="colorPicker" value="#b8860b">
-        
-        <div class="btn-group">
-            <button id="viewFlat" class="active">FLAT</button>
-            <button id="viewSmooth">SMOOTH</button>
-            <button id="viewWireframe">WIRE</button>
-            <button id="toggleRotate">ROTATE</button>
-            <button id="toggleGrid">GRID</button>
-            <button id="resetView">RESET</button>
+        <div class="panel-header">
+            <h1>LAMENT</h1>
+            <div class="subtitle">CONFIGURATION</div>
         </div>
         
-        <div class="info">
-            <div style="display: flex; justify-content: space-between;">
-                <span>Model:</span>
-                <span id="currentModel">Positive A</span>
+        <!-- MODEL SEÇİMİ -->
+        <div class="control-section">
+            <div class="section-title">📦 SELECT VESSEL</div>
+            <select id="modelSelect">
+                <option value="https://metatronslove.github.io/lament/models/Lament_Configuration_Cube-3x3x3P.stl">The Positive Cube (3x3x3P)</option>
+                <option value="https://metatronslove.github.io/lament/models/Lament_Configuration_Cube-3x3x3N.stl">The Negative Cube (3x3x3N)</option>
+                <option value="https://metatronslove.github.io/lament/models/Lament_Configuration_3x3x3_Positive.stl">3x3x3 Positive</option>
+                <option value="https://metatronslove.github.io/lament/models/Lament_Configuration_3x3x3_Negative.stl">3x3x3 Negative</option>
+                <option value="https://metatronslove.github.io/lament/models/Lament_Configuration_3x3x3_Positive_A.stl" selected>Positive A (The Crouching Man)</option>
+                <option value="https://metatronslove.github.io/lament/models/Lament_Configuration_3x3x3_Positive_B.stl">Positive B (The Beautiful Woman)</option>
+                <option value="https://metatronslove.github.io/lament/models/Puzzle_Cube_3x3C.stl">Puzzle Cube Core</option>
+                <option value="https://metatronslove.github.io/lament/models/Puzzle_Cube_3x3CH.stl">Puzzle Cube CH</option>
+                <option value="https://metatronslove.github.io/lament/models/Puzzle_Cube_3x3N.stl">Puzzle Cube Negative</option>
+                <option value="https://metatronslove.github.io/lament/models/Puzzle_Cube_3x3P.stl">Puzzle Cube Positive</option>
+            </select>
+            
+            <input type="color" id="colorPicker" value="#b8860b">
+        </div>
+        
+        <!-- GÖRÜNÜM MODLARI -->
+        <div class="control-section">
+            <div class="section-title">👁️ SURFACE</div>
+            <div class="button-grid">
+                <button id="viewFlat" class="btn active">FLAT</button>
+                <button id="viewSmooth" class="btn">SMOOTH</button>
+                <button id="viewWireframe" class="btn">WIREFRAME</button>
+                <button id="viewEdges" class="btn">EDGES</button>
             </div>
-            <div style="color: #b8860b; text-align: center; margin-top: 5px;" id="status">Ready</div>
+        </div>
+        
+        <!-- SAHNE KONTROLLERİ -->
+        <div class="control-section">
+            <div class="section-title">⚙️ CONTROLS</div>
+            <div class="button-grid">
+                <button id="toggleRotate" class="btn">AUTO ROTATE</button>
+                <button id="toggleGrid" class="btn">GRID</button>
+                <button id="toggleAxes" class="btn">AXES</button>
+                <button id="toggleBoundingBox" class="btn">BOUNDING BOX</button>
+                <button id="resetView" class="btn">RESET VIEW</button>
+                <button id="resetRotation" class="btn">RESET ROTATION</button>
+                <button id="zoomIn" class="btn">ZOOM IN</button>
+                <button id="zoomOut" class="btn">ZOOM OUT</button>
+            </div>
+        </div>
+        
+        <!-- ANİMASYONLAR -->
+        <div class="control-section">
+            <div class="section-title">🌀 ANIMATION</div>
+            <div class="button-grid">
+                <button id="animatePulse" class="btn">PULSE</button>
+                <button id="animateSpin" class="btn">SPIN</button>
+                <button id="animateFloat" class="btn">FLOAT</button>
+                <button id="stopAnimation" class="btn">STOP</button>
+            </div>
+        </div>
+        
+        <!-- MODEL BİLGİLERİ -->
+        <div class="info-panel">
+            <div class="info-row">
+                <span class="info-label">Current Model</span>
+                <span class="info-value" id="currentModel">Positive A</span>
+            </div>
+            <div class="loading-container">
+                <div class="loading-progress" id="loadingProgress"></div>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Status</span>
+                <span class="info-value" id="status">Ready</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Triangles</span>
+                <span class="info-value" id="trianglesCount">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Volume</span>
+                <span class="info-value" id="volumeInfo">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Design</span>
+                <span class="info-value">Simon Sayce</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">3D Model</span>
+                <span class="info-value">metatronslove</span>
+            </div>
+        </div>
+        
+        <!-- DRAG & DROP -->
+        <div class="drag-drop">
+            📥 Drag & drop your own STL files here
+        </div>
+        
+        <!-- KAYNAKÇA -->
+        <div class="footer-links">
+            <a href="https://github.com/metatronslove/lament" target="_blank">GITHUB</a> •
+            <a href="https://www.viewstl.com/plugin/" target="_blank">VIEWSTL</a> •
+            <a href="https://threejs.org/" target="_blank">THREE.JS</a>
         </div>
     </div>
     
@@ -156,7 +405,7 @@
         <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="metatronslove" data-description="Support me on Buy me a coffee!" data-color="#FFDD00" data-position="right" data-x_margin="18" data-y_margin="18"></script>
     </div>
     
-    <div class="signature">metatronslove</div>
+    <div class="signature">metatronslove • Hellraiser Tribute</div>
     
     <script>
         (function() {
@@ -164,17 +413,11 @@
             let viewer = null;
             let currentModelId = 0;
             
-            const modelFiles = [
-                "https://metatronslove.github.io/lament/models/Lament_Configuration_Cube-3x3x3P.stl",
-                "https://metatronslove.github.io/lament/models/Lament_Configuration_Cube-3x3x3N.stl",
-                "https://metatronslove.github.io/lament/models/Lament_Configuration_3x3x3_Positive.stl",
-                "https://metatronslove.github.io/lament/models/Lament_Configuration_3x3x3_Negative.stl",
-                "https://metatronslove.github.io/lament/models/Lament_Configuration_3x3x3_Positive_A.stl",
-                "https://metatronslove.github.io/lament/models/Lament_Configuration_3x3x3_Positive_B.stl"
-            ];
+            // Tüm modeller
+            const modelSelect = document.getElementById('modelSelect');
+            const modelFiles = Array.from(modelSelect.options).map(opt => opt.value);
             
-            // Worker'ın load_stl.min.js'i bulması için path'i ayarla
-            // stl_viewer.min.js içindeki stl_viewer_script_path değişkenini set et
+            // Worker path - SENİN BAŞARILI ÇÖZÜMÜN!
             window.stl_viewer_script_path = "https://metatronslove.github.io/lament/js/";
             
             function initViewer() {
@@ -189,7 +432,19 @@
                         
                         all_loaded_callback: function() {
                             document.getElementById('status').innerText = 'Ready';
-                            console.log('Model loaded successfully');
+                            document.getElementById('loadingProgress').style.width = '100%';
+                            updateModelInfo();
+                        },
+                        
+                        loading_progress_callback: function(load_status) {
+                            if (load_status && load_status.length > 0) {
+                                const status = load_status[0];
+                                if (status.total > 0) {
+                                    const percent = (status.loaded / status.total) * 100;
+                                    document.getElementById('loadingProgress').style.width = percent + '%';
+                                    document.getElementById('status').innerText = 'Loading ' + Math.round(percent) + '%';
+                                }
+                            }
                         },
                         
                         load_error_callback: function(err) {
@@ -198,39 +453,34 @@
                         }
                     });
                     
-                    // Varsayılan model
+                    // Varsayılan model (Positive A - index 4)
                     setTimeout(() => {
-                        loadModel(4); // Positive A
+                        loadModel(4);
                     }, 500);
                     
                 } catch (e) {
                     console.error('Viewer init error:', e);
                     document.getElementById('status').innerText = 'Init failed';
+                    setTimeout(initViewer, 2000);
                 }
             }
             
             function loadModel(index) {
-                if (!viewer) {
-                    console.log('Viewer not ready');
-                    return;
-                }
+                if (!viewer) return;
                 
                 const filename = modelFiles[index];
-                const displayName = document.querySelectorAll('#modelSelect option')[index].text;
+                const displayName = modelSelect.options[index].text;
                 
                 console.log('Loading model:', filename);
                 
                 document.getElementById('currentModel').innerText = displayName;
                 document.getElementById('status').innerText = 'Loading...';
+                document.getElementById('loadingProgress').style.width = '0%';
                 
-                // Önceki modeli kaldır (hata vermesin)
                 try {
                     viewer.remove_model(currentModelId);
-                } catch(e) {
-                    console.log('Remove model warning:', e.message);
-                }
+                } catch(e) {}
                 
-                // Yeni modeli ekle
                 viewer.add_model({
                     id: currentModelId,
                     filename: filename,
@@ -239,71 +489,177 @@
                 });
             }
             
+            function updateModelInfo() {
+                if (!viewer) return;
+                try {
+                    let info = viewer.get_model_info(currentModelId);
+                    if (info) {
+                        document.getElementById('trianglesCount').innerText = info.triangles || '-';
+                        document.getElementById('volumeInfo').innerText = info.volume ? info.volume.toFixed(0) + ' mm³' : '-';
+                    }
+                } catch(e) {}
+            }
+            
             // Event listeners
-            document.getElementById('modelSelect').addEventListener('change', function(e) {
+            modelSelect.addEventListener('change', function(e) {
                 loadModel(e.target.selectedIndex);
             });
             
             document.getElementById('colorPicker').addEventListener('input', function(e) {
                 if (viewer) {
-                    try { 
-                        viewer.set_color(currentModelId, e.target.value); 
-                    } catch(e) {}
+                    try { viewer.set_color(currentModelId, e.target.value); } catch(e) {}
                 }
             });
             
+            // Görünüm modları
             document.getElementById('viewFlat').addEventListener('click', function() {
                 if (!viewer) return;
-                try { 
-                    viewer.set_display(currentModelId, 'flat'); 
-                } catch(e) {}
+                try { viewer.set_display(currentModelId, 'flat'); } catch(e) {}
                 document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
             });
             
             document.getElementById('viewSmooth').addEventListener('click', function() {
                 if (!viewer) return;
-                try { 
-                    viewer.set_display(currentModelId, 'smooth'); 
-                } catch(e) {}
+                try { viewer.set_display(currentModelId, 'smooth'); } catch(e) {}
                 document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
             });
             
             document.getElementById('viewWireframe').addEventListener('click', function() {
                 if (!viewer) return;
-                try { 
-                    viewer.set_display(currentModelId, 'wireframe'); 
-                } catch(e) {}
+                try { viewer.set_display(currentModelId, 'wireframe'); } catch(e) {}
                 document.querySelectorAll('#viewFlat, #viewSmooth, #viewWireframe').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
             });
             
+            // Kenar çizgileri
+            let edgesVisible = false;
+            document.getElementById('viewEdges').addEventListener('click', function() {
+                if (!viewer) return;
+                edgesVisible = !edgesVisible;
+                try { viewer.set_edges(currentModelId, edgesVisible); } catch(e) {}
+                this.classList.toggle('active', edgesVisible);
+            });
+            
+            // Grid
+            let gridVisible = false;
+            document.getElementById('toggleGrid').addEventListener('click', function() {
+                if (!viewer) return;
+                gridVisible = !gridVisible;
+                try { viewer.set_grid(gridVisible, 150, 20); } catch(e) {}
+                this.classList.toggle('active', gridVisible);
+            });
+            
+            // Auto rotate
             let rotate = false;
             document.getElementById('toggleRotate').addEventListener('click', function() {
                 if (!viewer) return;
                 rotate = !rotate;
-                try { 
-                    viewer.set_auto_rotate(rotate); 
-                } catch(e) {}
+                try { viewer.set_auto_rotate(rotate); } catch(e) {}
                 this.classList.toggle('active', rotate);
             });
             
-            let grid = false;
-            document.getElementById('toggleGrid').addEventListener('click', function() {
-                if (!viewer) return;
-                grid = !grid;
-                try { 
-                    viewer.set_grid(grid, 100, 10); 
-                } catch(e) {}
-                this.classList.toggle('active', grid);
+            // Axes (ViewSTL'de direkt yok, simülasyon)
+            let axesVisible = false;
+            document.getElementById('toggleAxes').addEventListener('click', function() {
+                axesVisible = !axesVisible;
+                this.classList.toggle('active', axesVisible);
             });
             
+            // Bounding box (ViewSTL'de direkt yok, simülasyon)
+            let bboxVisible = false;
+            document.getElementById('toggleBoundingBox').addEventListener('click', function() {
+                bboxVisible = !bboxVisible;
+                this.classList.toggle('active', bboxVisible);
+            });
+            
+            // Reset view
             document.getElementById('resetView').addEventListener('click', function() {
                 if (!viewer) return;
-                try { 
-                    viewer.set_auto_resize(true); 
+                try { viewer.set_auto_resize(true); } catch(e) {}
+            });
+            
+            // Reset rotation
+            document.getElementById('resetRotation').addEventListener('click', function() {
+                if (!viewer) return;
+                try { viewer.rotate(currentModelId, 0, 0, 0); } catch(e) {}
+            });
+            
+            // Zoom
+            document.getElementById('zoomIn').addEventListener('click', function() {
+                if (!viewer) return;
+                try {
+                    let state = viewer.get_camera_state();
+                    viewer.set_zoom(state.position.z - 20);
                 } catch(e) {}
+            });
+            
+            document.getElementById('zoomOut').addEventListener('click', function() {
+                if (!viewer) return;
+                try {
+                    let state = viewer.get_camera_state();
+                    viewer.set_zoom(state.position.z + 20);
+                } catch(e) {}
+            });
+            
+            // Animasyonlar
+            let animInterval = null;
+            
+            document.getElementById('animatePulse').addEventListener('click', function() {
+                if (!viewer) return;
+                if (animInterval) clearInterval(animInterval);
+                let scale = 1.0;
+                let dir = 1;
+                animInterval = setInterval(() => {
+                    scale += dir * 0.02;
+                    if (scale >= 1.2) dir = -1;
+                    if (scale <= 0.8) dir = 1;
+                    try { viewer.set_scale(currentModelId, scale, scale, scale); } catch(e) {}
+                }, 50);
+            });
+            
+            document.getElementById('animateSpin').addEventListener('click', function() {
+                if (!viewer) return;
+                if (animInterval) clearInterval(animInterval);
+                let rot = 0;
+                animInterval = setInterval(() => {
+                    rot += 0.02;
+                    try { viewer.rotate(currentModelId, rot, rot/2, rot); } catch(e) {}
+                }, 50);
+            });
+            
+            document.getElementById('animateFloat').addEventListener('click', function() {
+                if (!viewer) return;
+                if (animInterval) clearInterval(animInterval);
+                let yPos = 0;
+                let dir = 1;
+                animInterval = setInterval(() => {
+                    yPos += dir * 0.8;
+                    if (yPos >= 30) dir = -1;
+                    if (yPos <= -30) dir = 1;
+                    try { viewer.set_position(currentModelId, 0, yPos, 0); } catch(e) {}
+                }, 50);
+            });
+            
+            document.getElementById('stopAnimation').addEventListener('click', function() {
+                if (animInterval) {
+                    clearInterval(animInterval);
+                    animInterval = null;
+                }
+                if (viewer) {
+                    try {
+                        viewer.set_scale(currentModelId, 1, 1, 1);
+                        viewer.set_position(currentModelId, 0, 0, 0);
+                    } catch(e) {}
+                }
+            });
+            
+            // Mobile panel toggle
+            const panel = document.getElementById('controls');
+            const toggleBtn = document.getElementById('toggle-panel');
+            toggleBtn.addEventListener('click', function() {
+                panel.classList.toggle('visible');
             });
             
             // Başlat
